@@ -277,6 +277,7 @@ function Home() {
           <Typography variant="h5" color="inherit" paragraph>
             We connect clients to healers worldwide
           </Typography>
+          <input type="text" placeholder="Search.." id="search"></input>
         </Paper>
 
         <Box className={classes.buttonContainer}>
