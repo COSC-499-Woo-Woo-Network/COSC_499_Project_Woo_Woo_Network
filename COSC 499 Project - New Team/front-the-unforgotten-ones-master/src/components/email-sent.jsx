@@ -14,6 +14,7 @@ import {
 } from '@material-ui/core';
 //can change this icon later on to our logo
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+import globalStyles from './comps/globalStyling.module.css';
 
 /** This is the theme for the items on this page - nav bar not included - STYLING here! */
 const useStyles = makeStyles((theme) => ({
