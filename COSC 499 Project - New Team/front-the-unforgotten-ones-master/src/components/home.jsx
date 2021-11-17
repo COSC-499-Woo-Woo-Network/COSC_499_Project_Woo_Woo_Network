@@ -26,6 +26,7 @@ import Copyright from './copyright.jsx';
 import MoreButton from './comps/moreButton';
 import PageTitle from './comps/pgTitle';
 import SmallClearButton from './comps/smlClearButton';
+import { isFirstDayOfMonth } from 'date-fns/esm';
 
 const useStyles = makeStyles((theme) => ({
   text: {
@@ -156,6 +157,7 @@ const Tag = (props) => {
  This way works as a showcase though.
  Maybe there could be a more detailed paragraph describing the site here too.
 */
+
 function Home() {
   const classes = useStyles();
   const [healers, setHealers] = useState([]);
@@ -236,6 +238,61 @@ function Home() {
     );
   }
 
+  let testHealer = [];
+
+  const Search = () => {
+    return (
+      <form action="/" method="get">
+        <label htmlFor="header-search">
+          <span className="visually-hidden">Filter Healer By Name </span>
+        </label>
+        <input
+          type="text"
+          id="header-search"
+          placeholder="Empty Search to Clear"
+          name="healName"
+        />
+        <button type="submit">Search</button>
+      </form>
+    );
+  };
+
+  const App = () => {
+    return <Search />;
+  };
+
+  const { search } = window.location;
+  const query = new URLSearchParams(search).get('healName');
+  {
+    if (query == '' || query == null) {
+      for (var i = 0; i < healers.length; i++) {
+        if (healers[i].firstName.includes('')) {
+          testHealer[i] = {
+            firstName: healers[i].firstName,
+            lastName: healers[i].lastName,
+            description: healers[i].description,
+            id: healers[i].id,
+          };
+        }
+      }
+    } else {
+      var query1 = query.toLowerCase();
+      for (var i = 0; i < healers.length; i++) {
+        if (
+          healers[i].firstName.toLowerCase().includes(query1) ||
+          healers[i].lastName.toLowerCase().includes(query1)
+        ) {
+          testHealer[i] = {
+            firstName: healers[i].firstName,
+            lastName: healers[i].lastName,
+            description: healers[i].description,
+            id: healers[i].id,
+          };
+        }
+      }
+    }
+  }
+
   React.useEffect(() => {
     // Fetches the array of healers to show on screen.
     (async () => {
@@ -277,9 +334,7 @@ function Home() {
           <Typography variant="h5" color="inherit" paragraph>
             We connect clients to healers worldwide
           </Typography>
-          <input type="text" placeholder="Search.." id="search"></input>
         </Paper>
-
         <Box className={classes.buttonContainer}>
           <Button
             color="primary"
@@ -332,17 +387,19 @@ function Home() {
       <Paper className={`${classes.Paper} ${globalStyles.defPgContainer}`}>
         <a id="healers_section">
           <PageTitle contents="Our Healers" />
+          <Search></Search>
+          <br></br>
         </a>
         {/* <Container className={classes.container}> */}
         <Grid container spacing={3}>
           {/* MAPPING             */}
-          {healers.slice(0, limit).map((healerName, i) => (
+          {testHealer.slice(0, limit).map((testHealer, i) => (
             <Healer
-              healerName={healerName.firstName + ' ' + healerName.lastName}
-              healerDesc={healerName.description}
-              key={healerName + i}
-              userid={healerName.id}
-              healerImage={healerName.photo}
+              healerName={testHealer.firstName + ' ' + testHealer.lastName}
+              healerDesc={testHealer.description}
+              key={testHealer + i}
+              userid={testHealer.id}
+              healerImage={testHealer.photo}
             />
           ))}
           <Grid item xs={12}>
