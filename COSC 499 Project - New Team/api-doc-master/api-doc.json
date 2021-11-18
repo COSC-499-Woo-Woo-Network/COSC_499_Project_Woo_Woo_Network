@@ -1,0 +1,2090 @@
+{
+    "openapi": "3.0.3",
+    "info": {
+        "title": "The Woo Woo Net API",
+        "version": "1.0"
+    },
+    "components": {
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT"
+            }
+        },
+        "schemas": {
+            "password": {
+                "description": "user's password",
+                "type": "string",
+                "format": "password",
+                "minLength": 8,
+                "pattern": "^(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[0-9])[a-zA-Z0-9]{8,}$",
+                "example": "password123"
+            },
+            "email": {
+                "type": "string",
+                "format": "email",
+                "description": "User email",
+                "example": "BobbyB@billy.ca"
+            },
+            "firstName": {
+                "type": "string",
+                "minLength": 2,
+                "maxLength": 15,
+                "pattern": "[A-Za-z]{2,15}",
+                "description": "First name of the user.",
+                "example": "Fred"
+            },
+            "lastName": {
+                "type": "string",
+                "minLength": 2,
+                "maxLength": 15,
+                "pattern": "[A-Za-z]{2,15}",
+                "description": "Last name of the user.",
+                "example": "Mercury"
+            },
+            "description": {
+                "type": "string",
+                "description": "This is the description about healer. Note: only available for healer",
+                "example": "this is the description about healer. Note: only available for healer"
+            },
+            "brandName": {
+                "type": "string",
+                "description": "This the the healer branding name. Note: only available for healer",
+                "example": "Heality. Note: only available for healer"
+            },
+            "photo": {
+                "type": "string",
+                "description": "This the the link of photo/image",
+                "example": "https://images.unsplash.com/photo-1623251864930-f50bbe6b0e9d?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80"
+
+            },
+            "uploadingPhoto": {
+                "type": "string",
+                "format": "binary",
+                "description": "Please do some research about form-data to send file to the server"
+            },
+            "newHealingService": {
+                "type": "object",
+                "required": ["name", "price", "timeLength"],
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "example": "example name"
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "example description",
+                        "description": "service description"
+                    },
+                    "price": {
+                        "type": "float",
+                        "example": "20",
+                        "description": "it will use US currency"
+                    },
+                    "timeLength": {
+                        "type": "integer",
+                        "example": 30,
+                        "description": "a time length for a service"
+                    },
+                    "cleanUpTime": {
+                        "type": "integer",
+                        "example": "5",
+                        "description": "a time length for a cleaning up after an appointment"
+                    },
+                    "isAvailableOnline": {
+                        "type": "boolean",
+                        "example": "true",
+                        "description": "means this service can be online"
+                    }
+                }
+            },
+            "createdHealingService": {
+                "type": "object",
+                "required": ["name", "price"],
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": "1"
+                    },
+                    "healerId": {
+                        "type": "integer",
+                        "example": "1"
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "example name",
+                        "description": "Name length should be 3-50."
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "example description",
+                        "description": "service description"
+                    },
+                    "price": {
+                        "type": "float",
+                        "example": "20",
+                        "description": "it will use US currency"
+                    },
+                    "timeLength": {
+                        "type": "integer",
+                        "example": "30",
+                        "description": "a time length for a service"
+                    },
+                    "cleanUpTime": {
+                        "type": "integer",
+                        "example": "5",
+                        "description": "a time length for a cleaning up after an appointment"
+                    },
+                    "isAvailableOnline": {
+                        "type": "boolean",
+                        "example": "true",
+                        "description": "means this service can be online"
+                    }
+                }
+            },
+            "user": {
+                "description": "Common user information",
+                "type": "object",
+                "required": ["firstName", "lastName", "image", "email"],
+                "properties": {
+                    "firstName": {
+                        "$ref": "#/components/schemas/firstName"
+                    },
+                    "lastName": {
+                        "$ref": "#/components/schemas/lastName"
+                    },
+                    "email": {
+                        "$ref": "#/components/schemas/email"
+                    },
+                    "photo": {
+                        "$ref": "#/components/schemas/photo"
+                    }
+                }
+            },
+            "registerUserInfo": {
+                "description": "The user information to register a new account",
+                "required": ["firstName", "lastName", "email", "isHealer", "password"],
+                "properties": {
+                    "isHealer": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "firstName": {
+                        "$ref": "#/components/schemas/firstName"
+                    },
+                    "lastName": {
+                        "$ref": "#/components/schemas/lastName"
+                    },
+                    "email": {
+                        "$ref": "#/components/schemas/email"
+                    },
+                    "password": {
+                        "$ref": "#/components/schemas/password"
+                    }
+                }
+            },
+            "userInsensitiveInformation": {
+                "description": "The user information to register a new account",
+                "type": "object",
+                "properties": {
+                    "firstName": {
+                        "$ref": "#/components/schemas/firstName"
+                    },
+                    "lastName": {
+                        "$ref": "#/components/schemas/lastName"
+                    }
+                }
+            },
+            "updateHealerProfile": {
+                "description": "Healer profile info",
+                "type": "object",
+                "properties": {
+                    "brandName": {
+                        "$ref": "#/components/schemas/brandName"
+                    },
+                    "description": {
+                        "$ref": "#/components/schemas/description"
+                    },
+                    "location": {
+                        "$ref": "#/components/schemas/location"
+                    },
+                    "tags": {
+                        "type": "array",
+                        "items": {
+                            "description": "an array of tag id",
+                            "type": "integer",
+                            "example": "1"
+                        }
+                    }
+                }
+            },
+            "healerBriefInfo": {
+                "type": "object",
+                "description": "Healer profile with healer bios and some extra data",
+                "required": [
+                    "firstName", "lastName", "email", "photo", "brandName", "description"
+                ],
+                "properties": {
+                    "firstName": {
+                        "$ref": "#/components/schemas/firstName"
+                    },
+                    "lastName": {
+                        "$ref": "#/components/schemas/lastName"
+                    },
+                    "photo": {
+                        "$ref": "#/components/schemas/photo"
+                    },
+                    "brandName": {
+                        "$ref": "#/components/schemas/brandName"
+                    },
+                    "description": {
+                        "$ref": "#/components/schemas/description"
+                    }
+                }
+            },
+            "healerProfile": {
+                "type": "object",
+                "description": "Healer profile with healer bios and some extra data",
+                "required": [
+                    "firstName", "lastName", "email", "photo", "brandName", "description"
+                ],
+                "properties": {
+                    "healerProfileId": {
+                        "type": "integer",
+                        "example": "1"
+                    },
+                    "firstName": {
+                        "$ref": "#/components/schemas/firstName"
+                    },
+                    "lastName": {
+                        "$ref": "#/components/schemas/lastName"
+                    },
+                    "email": {
+                        "$ref": "#/components/schemas/email"
+                    },
+                    "photo": {
+                        "$ref": "#/components/schemas/photo"
+                    },
+                    "brandName": {
+                        "$ref": "#/components/schemas/brandName"
+                    },
+                    "description": {
+                        "$ref": "#/components/schemas/description"
+                    },
+                    "location": {
+                        "$ref": "#/components/schemas/location"
+                    },
+                    "tags": {
+                        "type": "array",
+                        "description": "A list of tag id",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "name": {
+                                    "type": "string",
+                                    "example": "anxiety"
+                                }
+                            }
+                            
+                        }
+                    }
+                }
+            },
+            "newReview": {
+                "type": "object",
+                "required": ["healerProfileId", "rating", "description"],
+                "properties": {
+                    "appointmentId": {
+                        "type": "integer",
+                        "example": 4
+                    },
+                    "rating": {
+                        "type": "number",
+                        "format": "float"
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "This healer is very good."
+                    },
+                    "photo": {
+                        "$ref": "#/components/schemas/uploadingPhoto"
+                    },
+                    "tags": {
+                        "type": "array",
+                        "description": "A list of tag id",
+                        "items": {
+                            "type": "integer",
+                            "describe": "tag id",
+                            "example": "5"
+                        }
+                    }
+                }
+            },
+            "review": {
+                "type": "object",
+                "required": ["userId", "healerId", "rating", "description"],
+                "properties": {
+                    "appointmentId": {
+                        "type": "integer",
+                        "example": 9
+                    },
+                    "reviewerId": {
+                        "type": "integer",
+                        "example": 3
+                    },
+                    "rating": {
+                        "type": "number",
+                        "format": "float",
+                        "example": "4.5"
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "This healer is very good."
+                    },
+                    "tags": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/tag"
+                        }
+                    },
+                    "photo": {
+                        "$ref": "#/components/schemas/photo"
+                    },
+                    "createdAt": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updatedAt": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                }
+            },
+            "newHealingDiary": {
+                "type": "object",
+                "required": ["appointmentId", "photo", "description"],
+                "properties": {
+                    "description": {
+                        "type": "string",
+                        "example": "I feel better."
+                    },
+                    "date": {
+                        "type": "string",
+                        "format":"YYYY-MM-DD",
+                        "example": "2021-05-20"
+                    }
+                }
+            },
+            "tag": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "example": "anxiety"
+                    },
+                    "id": {
+                        "type": "integer",
+                        "example": "1"
+                    }
+                }
+            },
+            "location": {
+                "description": "current user location. should be available for healer and client.",
+                "type": "object",
+                "properties": {
+                    "address": {
+                        "type": "string",
+                        "example": "123 Tait st"
+                    },
+                    "city": {
+                        "type": "string",
+                        "example": "Victoria"
+                    },
+                    "country": {
+                        "type": "string",
+                        "example": "Canada"
+                    },
+                    "postalCode": {
+                        "type": "string",
+                        "example": "V5Z 3R4"
+                    }
+                }
+            },
+            "createdHealingDiary": {
+                "type": "object",
+                "properties": {
+                    "userId": {
+                        "type": "integer",
+                        "example": 9
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "I feel better."
+                    },
+                    "date": {
+                        "type": "string",
+                        "format":"YYYY-MM-DD",
+                        "example": "2021-05-20"
+                    }
+                }
+            },
+            "updateDiary": {
+                "type": "object",
+                "required": ["appointmentId", "photo", "description"],
+                "properties": {
+                    "description": {
+                        "type": "string",
+                        "example": "I feel better."
+                    },
+                    "date": {
+                        "type": "string",
+                        "format":"YYYY-MM-DD",
+                        "example": "2021-05-20"
+                    }
+                }
+            },
+            "schedule": {
+                "type": "object",
+                "required": ["startDate", "endDate", "period"],
+                "properties": {
+                    "date": {
+                        "type": "string",
+                        "format": "YYYY-MM-DD",
+                        "example": "2021-03-12"
+                    },
+                    "periods": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/period"
+                        }
+                    }
+                }
+            },
+            "period": {
+                "type": "object",
+                "description": "A working period for healer in a day",
+                "required": ["startTime", "endTime"],
+                "properties": {
+                    "startTime": {
+                        "description": "HH will be from 00 to 23, MM will be from 00 to 59",
+                        "type": "string",
+                        "format": "HH:MM",
+                        "example": "10:00"
+                    },
+                    "endTime": {
+                        "type": "string",
+                        "format": "HH:MM",
+                        "example": "15:00"
+                    }
+                }
+            },
+            "availableSlotRequest": {
+                "type": "object",
+                "required": ["startDate", "endDate", "healerProfileId"],
+                "properties": {
+                    "startDate": {
+                        "type": "string",
+                        "format": "YYYY-MM-DD",
+                        "example": "2021-07-15"
+                    },
+                    "endDate": {
+                        "type": "string",
+                        "format": "YYYY-MM-DD",
+                        "example": "2021-07-20"
+                    },
+                    "timezone": {
+                        "type": "string",
+                        "description": "Use moment timezone to get user timezone with this syntax moment.tz.guess();",
+                        "example": "America/New_York"
+                    },
+                    "healer": {
+                        "type": "integer",
+                        "example": 1
+                    }
+                }
+
+            },
+            "bookAppointmentRequest": {
+                "type": "object",
+                "required": ["healer", "date", "timeSlot", "serviceId"],
+                "properties": {
+                    "healer": {
+                        "description": "healer profile id/ healer id",
+                        "type": "integer",
+                        "example": "3"
+                    },
+                    "timezone": {
+                        "type": "string",
+                        "description": "Use moment timezone to get user timezone with this syntax moment.tz.guess();",
+                        "example": "America/New_York"
+                    },
+                    "timeSlot": {
+                        "type": "string",
+                        "format": "HH:MM",
+                        "example": "15:00"
+                    },
+                    "date": {
+                        "type": "string",
+                        "format": "YYYY-MM-DD",
+                        "example": "2021-07-15"
+                    }
+                }
+            },
+            "rescheduleAppointmentRequest": {
+                "type": "object",
+                "required": ["healer", "date", "timeSlot", "serviceId"],
+                "properties": {
+                    "timezone": {
+                        "type": "string",
+                        "description": "Use moment timezone to get user timezone with this syntax moment.tz.guess();",
+                        "example": "America/New_York"
+                    },
+                    "timeSlot": {
+                        "type": "string",
+                        "format": "HH:MM",
+                        "example": "15:00"
+                    },
+                    "date": {
+                        "type": "string",
+                        "format": "YYYY-MM-DD",
+                        "example": "2021-07-15"
+                    }
+                }
+            },
+            "appointmentInfo": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": "1"
+                    },
+                    "clientId": {
+                        "type": "integer",
+                        "example": "1"
+                    },
+                    "healerProfileId": {
+                        "type": "integer",
+                        "example": "3"
+                    },
+                    "sessionTime": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "price": {
+                        "type": "float",
+                        "example": "40.5"
+                    },
+                    "sessionLength": {
+                        "type": "integer",
+                        "example": "40"
+                    },
+                    "participantName": {
+                        "type": "string",
+                        "example": "John Doe"
+                    }
+                }
+            },
+            "createdAppointment": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": "1"
+                    },
+                    "clientId": {
+                        "type": "integer",
+                        "example": "1"
+                    },
+                    "healerProfileId": {
+                        "type": "integer",
+                        "example": "3"
+                    },
+                    "sessionTime": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "price": {
+                        "type": "float",
+                        "example": "40.5"
+                    },
+                    "sessionLength": {
+                        "type": "integer",
+                        "example": "40"
+                    }
+                }
+            },
+            "availableSlots": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "date": {
+                            "type": "string",
+                            "format": "YYYY-MM-DD",
+                            "example": "2021-07-15"
+                        },
+                        "availableSlots": {
+                            "type": "array",
+                            "items": {
+                                "type": "string",
+                                "format": "HH:MM",
+                                "example": "15:00"
+                            }
+
+                        },
+                        "bookedSlots": {
+                            "description": "This is for validation purpose on the frontend",
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "sessionTime": {
+                                        "type": "string",
+                                        "format": "date-time"
+                                    },
+                                    "timeLength": {
+                                        "description": "time in minutes",
+                                        "type": "integer",
+                                        "example": "40"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "properties": {
+                    "startDate": {
+                        "type": "string",
+                        "format": "YYYY-MM-DD",
+                        "example": "2021-07-15"
+                    },
+                    "endDate": {
+                        "type": "string",
+                        "format": "YYYY-MM-DD",
+                        "example": "2021-07-20"
+                    },
+                    "timezone": {
+                        "type": "string",
+                        "description": "Use moment timezone to get user timezone with this syntax moment.tz.guess();",
+                        "example": "America/New_York"
+                    },
+                    "healerProfileId": {
+                        "type": "integer",
+                        "example": 1
+                    }
+                }
+
+            },
+            "cancelFee": {
+                "type": "object",
+                "description": "this is the cancel fee if client cancel within particular days",
+                "properties": {
+                    "fee": {
+                        "type": "float",
+                        "example": "4",
+                        "description": "Unit price is dollar"
+                    },
+                    "appliedDay": {
+                        "type": "integer",
+                        "example": "2",
+                        "description": "Day toward appointment time to cancel"
+                    }
+                }
+            },
+            "scheduleRequest": {
+                "type": "object",
+                "description": "Request healer schedule",
+                "properties": {
+                    "startDate": {
+                        "type": "string",
+                        "format": "YYYY-MM-DD",
+                        "example": "2021-07-15"
+                    },
+                    "endDate": {
+                        "type": "string",
+                        "format": "YYYY-MM-DD",
+                        "example": "2021-07-20"
+                    },
+                    "timezone": {
+                        "type": "string",
+                        "description": "Use moment timezone to get user timezone with this syntax moment.tz.guess();",
+                        "example": "America/New_York"
+                    }
+                }
+            },
+            "updateScheduleRequest": {
+                "type": "object",
+                "required": ["schedules"],
+                "properties": {
+                    "schedules": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/schedule"
+                        }
+                    },
+                    "timezone": {
+                        "type": "string",
+                        "description": "Use moment timezone to get user timezone with this syntax moment.tz.guess();",
+                        "example": "America/New_York"
+                    }
+                }
+            }
+        },
+        "responses": {
+            "Unauthorized": {
+                "description": "Missing authentication token."
+            },
+            "TooManyRequests": {
+                "description": "Too Many Requests."
+            },
+            "BadRequest": {
+                "description": "Bad request."
+            },
+            "NotFound": {
+                "description": "Not found"
+            }
+        }
+    },
+    "paths": {
+        "/users": {
+            "description": "Sign-up endpoint. User registration either client or healer",
+            "post": {
+                "summary": "User registration",
+                "description": "Register a new user, after successfully, user need to go to email and click on the link to verify their email address to be active user and access other services on the website.",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/registerUserInfo"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Email verification has been sent"
+                    },
+                    "403": {
+                        "description": "email already exists."
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/BadRequest"
+                    }
+                }
+            },
+            "get": {
+                "summary": "Get current user information",
+                "description": "If user is healer, the system will send information about brand name and description fields",
+                "security": [{
+                    "bearerAuth": []
+                }],
+                "responses": {
+                    "200": {
+                        "description": "Get user information. If user is healer, it will also send brand name and healer profile description.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/healerProfile"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/BadRequest"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/Unauthorized"
+                    }
+                }
+            },
+            "put": {
+                "summary": "Update user non-sensitive information",
+                "security": [{
+                    "bearerAuth": []
+                }],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/userInsensitiveInformation"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "204": {
+                        "description": "User profile has been updated."
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/Unauthorized"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/BadRequest"
+                    }
+                }
+            }
+        },
+        "/users/healerProfile": {
+            "put": {
+                "summary": "Update healer profile",
+                "security": [{
+                    "bearerAuth": []
+                }],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/updateHealerProfile"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Location has been update successfully"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/Unauthorized"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/BadRequest"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/NotFound"
+                    }               
+                }
+            }
+        },
+        "/users/location": {
+            "summary": "Update user location",
+            "patch": {
+                "summary": "Update current user location",
+                "security": [{
+                    "bearerAuth": []
+                }],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/location"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Location has been update successfully"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/Unauthorized"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/BadRequest"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/NotFound"
+                    }               
+                }
+            }
+        },
+        "/users/email": {
+            "summary": "Update user email",
+            "patch": {
+                "security": [{
+                    "bearerAuth": []
+                }],
+                "summary": "Update email",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "required": [
+                                    "email", "password"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "$ref": "#/components/schemas/email"
+                                    },
+                                    "password": {
+                                        "$ref": "#/components/schemas/password"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Email has been update successfully.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "description": "A access token to access api services",
+                                    "properties": {
+                                        "token": {
+                                            "type": "string",
+                                            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/Unauthorized"
+                    },
+                    "400": {
+                        "description": "Bad request. Invalid email or password"
+                    },
+                    "404": {
+                        "description": "Not found user info"
+                    }
+                    
+                }
+                
+            }
+        },
+        "/users/password": {
+            "summary": "Update user password",
+            "patch": {
+                "summary": "Update password",
+                "security": [{
+                    "bearerAuth": []
+                }],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "required": [
+                                    "oldPassword", "newPassword"
+                                ],
+                                "properties": {
+                                    "oldPassword": {
+                                        "$ref": "#/components/schemas/password"
+                                    },
+                                    "newPassword": {
+                                        "$ref": "#/components/schemas/password"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "User password has been update successfully."
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/Unauthorized"
+                    },
+                    "400": {
+                        "description": "Bad request."
+                    }
+                }
+            }
+        },
+        "/users/photo": {
+            "summary": "Upload user photo",
+            "patch": {
+                "summary": "Upload user photo",
+                "security": [{
+                    "bearerAuth": []
+                }],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "description": "Please take a look at form-data to send file to the server",
+                                "type": "object",
+                                "required": ["photo"],
+                                "properties": {
+                                    "photo": {
+                                        "$ref": "#/components/schemas/uploadingPhoto"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "User photo has been uploaded to server.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/photo"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/Unauthorized"
+                    },
+                    "400": {
+                        "description": "Bad request."
+                    }
+                }
+            }
+        },
+        "/auth/login": {
+            "summary": "Authenticate a user",
+            "description": "Send request of user credentials and receive authentication token",
+            "post": {
+                "summary": "User Login",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "required": ["email", "password"],
+                                "properties": {
+                                    "email": {
+                                        "$ref": "#/components/schemas/email"
+                                    },
+                                    "password": {
+                                        "$ref": "#/components/schemas/password"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "User login successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "description": "A access token to access api services. Need to update later on.",
+                                    "properties": {
+                                        "token": {
+                                            "description": "An access token that will be expired after 1 hour",
+                                            "type": "string",
+                                            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/BadRequest"
+                    },
+                    "401": {
+                        "description": "Either email or password is incorrect."
+                    }
+                }
+            }
+        },
+        "auth/reset-password": {
+            "summary": "Forget password",
+            "post": {
+                "summary": "Reset password request",
+                "description": "Ask system allows user reset the password",
+                "requestBody": {
+                    "description": "User email to reset password",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": ["email"],
+                                "properties": {
+                                    "email": {
+                                        "$ref": "#/components/schemas/email"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "The request has been sent to email."
+                    },
+                    "400": {
+                        "description": "Bad request. Can not send the link to request email address."
+                    }
+                }
+            },
+            "put": {
+                "summary": "Reset password",
+                "description": "Reset user password",
+                "requestBody": {
+                    "description": "User email to reset password",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": ["password", "resetCode"],
+                                "properties": {
+                                    "password": {
+                                        "$ref": "#/components/schemas/email"
+                                    },
+                                    "resetCode": {
+                                        "type": "string",
+                                        "example": "IIImmwtjbpvYvRjYrVHm5enC90V8UOzPnkwALHgv3FEAAAF5zm_yoQ",
+                                        "description": "The code to identify user to reset password"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Password has been updated."
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    }
+                }
+            }
+        },
+        "auth/verify": {
+            "summary": "verify the link in user email",
+            "description": "Verify user email to activate user account.",
+            "get": {
+                "summary": "Verify the link in user email",
+                "parameters": [{
+                        "in": "query",
+                        "name": "mode",
+                        "description": "what kind of verification, which is generated by Firebase",
+                        "schema": {
+                            "type": "string",
+                            "example": "resetPassword",
+                            "description": "Either resetPassword or verifyEmail"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "oobCode",
+                        "description": "The code to verify user request",
+                        "schema": {
+                            "type": "string",
+                            "example": "IIImmwtjbpvYvRjYrVHm5enC90V8UOzPnkwALHgv3FEAAAF5zm_yoQ",
+                            "description": "Either resetPassword or verifyEmail"
+                        }
+                    }
+                ],
+                "responses": {
+                    "308": {
+                        "description": "Redirect to related front-end page.\n Verify email: redirect to a page said your account has been verify\n Reset password: redirect to reset password form with the verify code.\n The front-end router will be provided some query params like ?verify={true/false}&code={code for reset password}"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/NotFound"
+                    }
+                }
+            }
+        },
+        "/healers?limit={limitNum}&start={startPoint}": {
+            "summary": "Public healer information",
+            "get": {
+                "summary": "Public healer list",
+                "description": "A list of healer. Later on will add pagination to just send a certain amount of healer. About pagination on material-ui, take a look at: https://material-ui.com/components/pagination/#pagination",
+                "parameters": [{
+                    "in": "query",
+                    "name": "limit",
+                    "type": "integer",
+                    "description": "number of healer profile required to get. Default value is 5"
+                }, {
+                    "in": "query",
+                    "name": "start",
+                    "type": "integer",
+                    "description": "the start position of the list in the database. The default value is 0."
+                }],
+                "responses": {
+                    "200": {
+                        "description": "Get a list of healer",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "description": "A access token to access api services. Need to update later on.",
+                                    "items": {
+                                        "$ref": "#/components/schemas/healerBriefInfo"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/BadRequest"
+                    }
+                }
+            }
+        },
+        "/healers/{healerProfileId}": {
+            "summary": "Healer publish profile",
+            "get": {
+                "parameters": [{
+                    "in": "path",
+                    "name": "healerProfileId",
+                    "type": "integer",
+                    "description": "Healer Profile id",
+                    "required": true
+                }],
+                "summary": "Healer publish profile",
+                "responses": {
+                    "200": {
+                        "description": "A healer profile",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "description": "A access token to access api services. Need to update later on.",
+                                    "items": {
+                                        "$ref": "#/components/schemas/healerProfile"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/BadRequest"
+                    }
+                }
+            }
+        },
+        "/reviews": {
+            "summary": "Healer review",
+            "get": {
+                "summary": "Healer review list",
+                "description": "A list of reviews. The request url should be similar like /reviews?healer={healerProfileId}&limit={number of returned healer}&start={index in the list to get}",
+                "parameters": [{
+                        "in": "query",
+                        "name": "healer",
+                        "type": "integer",
+                        "description": "Healer profile id"
+                    },
+                    {
+                        "in": "query",
+                        "name": "user",
+                        "type": "integer",
+                        "description": "User id or user uid"
+                    },
+                    {
+                        "in": "query",
+                        "name": "limit",
+                        "type": "integer",
+                        "description": "max number of review returned"
+                    },
+                    {
+                        "in": "query",
+                        "name": "start",
+                        "type": "integer",
+                        "description": "start position of review (for pagination purpose)"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "A list of review regarding query options",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/review"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/BadRequest"
+                    }
+                }
+            },
+            "post": {
+                "summary": "Create new review",
+                "security": [{
+                    "bearerAuth": []
+                }],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/newReview"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "New review has been created.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/review"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "You can not review your profile"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/Unauthorized"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/BadRequest"
+                    }
+                }
+            }
+        },
+        "/reviews/reviewId": {
+            "get": {
+                "summary": "Get a review based on reviewId",
+                "responses": {
+                    "200": {
+                        "description": "Get a review based on reviewId.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/review"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/BadRequest"
+                    }
+                }
+
+            },
+            "put": {
+                "summary": "Update a review",
+                "security": [{
+                    "bearerAuth": []
+                }],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/newReview"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "204": {
+                        "description": "The review has been updated."
+                    },
+                    "403": {
+                        "description": "Can not update other's review"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/Unauthorized"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/BadRequest"
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete a review",
+                "security": [{
+                    "bearerAuth": []
+                }],
+                "responses": {
+                    "204": {
+                        "description": "The review has been deleted."
+                    },
+                    "403": {
+                        "description": "Can not delete other's review"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/Unauthorized"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/BadRequest"
+                    }
+                }
+            }
+        },
+        "/tags": {
+            "get": {
+                "summary": "Get a list of review tags",
+                "responses": {
+                    "200": {
+                        "description": "A list of review tag",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/tag"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/BadRequest"
+                    }
+                }
+            }
+        },
+        "/services": {
+            "summary": "Healing services",
+            "get": {
+                "summary": "Get healing service list",
+                "description": "The request url should be like: /services?healer={healerProfileId}",
+                "parameters": [{
+                        "in": "query",
+                        "name": "healer",
+                        "type": "integer",
+                        "description": "healerProfileId. If no specify, it will return a service list from all healer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Get a list of services.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/createdHealingService"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/BadRequest"
+                    }
+                }
+            },
+            "post": {
+                "summary": "Create a healing service",
+                "security": [{
+                    "bearerAuth": []
+                }],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/newHealingService"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "New service has been created.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/createdHealingService"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Only healer can create services"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/Unauthorized"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/BadRequest"
+                    }
+                }
+            }
+        },
+        "/services/{serviceId}": {
+            "put": {
+                "summary": "Update a service",
+                "security": [{
+                    "bearerAuth": []
+                }],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/newHealingService"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "204": {
+                        "description": "The service has been updated."
+                    },
+                    "403": {
+                        "description": "Can not update other's healer service"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/Unauthorized"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/BadRequest"
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete a healing service",
+                "security": [{
+                    "bearerAuth": []
+                }],
+                "responses": {
+                    "204": {
+                        "description": "The service has been deleted."
+                    },
+                    "403": {
+                        "description": "Can not delete other's healer service"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/Unauthorized"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/BadRequest"
+                    }
+                }
+            }
+        },
+        "/schedules": {
+            "summary": "Manage healer schedule",
+            "get": {
+                "security": [{
+                    "bearerAuth": []
+                }],
+                "summary": "Get healer schedule list",
+                "description": "Get a schedule list of current healer user. Only get schedule for 7 days maximum",
+                "parameters": [{
+                    "in": "query",
+                    "name": "startDate",
+                    "type": "string",
+                    "description": "string <YYYY-MM-DD>"
+                },
+                {
+                    "in": "query",
+                    "name": "endDate",
+                    "type": "string",
+                    "description": "string <YYYY-MM-DD>"
+                },
+                {
+                    "in": "query",
+                    "name": "timezone",
+                    "type": "string",
+                    "description": "Use moment timezone to get user timezone with this syntax moment.tz.guess();"
+                }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "A list of schedule",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/schedule"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/NotFound"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/BadRequest"
+                    }
+                }
+            },
+            "post": {
+                "security": [{
+                    "bearerAuth": []
+                }],
+                "summary": "Update or create schedule",
+                "description": "Update or create schedule for current healer user. Only update 7 days maximum",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/updateScheduleRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Schedule has been successfully updated."
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/NotFound"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/BadRequest"
+                    }
+                },
+                "401": {
+                    "$ref": "#/components/responses/Unauthorized"
+                }
+            },
+            "delete": {
+                "security": [{
+                    "bearerAuth": []
+                }],
+                "summary": "Delete schedule",
+                "description": "Delete schedule for current healer user. Only delete 7 days maximum",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/scheduleRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "204": {
+                        "description": "Schedule has been deleted."
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/NotFound"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/BadRequest"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/Unauthorized"
+                    }
+                }
+                
+            }
+        },
+        "/appointments/available": {
+            "summary": "Get healer available slots",
+            "get": {
+                "summary": "Get available slots",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "healer",
+                        "type": "integer",
+                        "example": "1"
+                    },
+                    {
+                        "in": "query",
+                        "name": "startDate",
+                        "type": "string",
+                        "example": "2021-08-10"
+                    },
+                    {
+                        "in": "query",
+                        "name": "endDate",
+                        "type": "string",
+                        "example": "2021-08-16"
+                    },
+                    {
+                        "in": "query",
+                        "name": "timezone",
+                        "type": "string",
+                        "example": "Europe/London"
+                    }
+                    
+                ],
+                "responses": {
+                    "200": {
+                        "description": "A list of available shots. Will need to validate about the available slots with booked slots",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/availableSlots"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/NotFound"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/BadRequest"
+                    }
+                }
+                
+            }
+            
+        },
+        "/appointments/book": {
+            "summary": "book an appointment",
+                "post": {
+                    "description": "book appointment",
+                "security": [{
+                    "bearerAuth": []
+                }],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/bookAppointmentRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "checkout url",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "checkoutUrl": {
+                                            "type": "string",
+                                            "example": "https://stripe-checkout.example.com"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/NotFound"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/BadRequest"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/Unauthorized"
+                    }
+                }
+            }
+
+        },
+        "/appointments/payment-success": {
+            "post": {
+                "description": "Stripe hook to update appointment status",
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/rescheduleAppointmentRequest"
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "The appointment status has been updated"
+                },
+                "404": {
+                    "$ref": "#/components/responses/NotFound"
+                },
+                "400": {
+                    "$ref": "#/components/responses/BadRequest"
+                }
+            }
+        },
+        "/appointments/:id/reschedule": {
+            "post": {
+                "description": "reschedule appointment",
+            "security": [{
+                "bearerAuth": []
+            }],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/rescheduleAppointmentRequest"
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "checkout appointment has been re-scheduled"
+                },
+                "404": {
+                    "$ref": "#/components/responses/NotFound"
+                },
+                "400": {
+                    "$ref": "#/components/responses/BadRequest"
+                },
+                "401": {
+                    "$ref": "#/components/responses/Unauthorized"
+                }
+            }
+        }
+
+        },
+        "/appointments/upcoming": {
+            "security": [{
+                "bearerAuth": []
+            }],
+            "get": {
+                "summary": "Get upcoming appointment",
+                "responses": {
+                    "200": {
+                        "description": "Get upcoming appointment",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                   "type": "array",
+                                   "items": {
+                                        "$ref": "#/components/schemas/appointmentInfo"
+                                   }
+                                }
+                            }
+                        }
+                        
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/NotFound"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/BadRequest"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/Unauthorized"
+                    }
+                }
+            }
+        },
+        "/appointments/history": {
+            "security": [{
+                "bearerAuth": []
+            }],
+            "get": {
+                "summary": "Get appointment history",
+                "description": "get appointment history (past appointment)",
+                "responses": {
+                    "200": {
+                        "description": "Get upcoming appointment",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                   "type": "array",
+                                   "items": {
+                                        "$ref": "#/components/schemas/appointmentInfo"
+                                   }
+                                }
+                            }
+                        }
+                        
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/NotFound"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/BadRequest"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/Unauthorized"
+                    }
+                }
+            }
+        },
+        "/appointments/:id/request/cancel": {
+            "get": {
+                "summary": "Request client to cancel appointment",
+                "responses": {
+                    "200": {
+                        "description": "Request has been sent."
+                        
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/NotFound"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/BadRequest"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/Unauthorized"
+                    }
+                }
+            }
+
+        },
+        "/appointments/:id/request/reschedule": {
+            "get": {
+                "summary": "Request client to re-schedule appointment",
+                "responses": {
+                    "200": {
+                        "description": "Request has been sent"
+                        
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/NotFound"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/BadRequest"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/Unauthorized"
+                    }
+                }
+            }
+        },
+        "/cancel-fee": {
+            "summary": "healer cancel fee to applied for client who cancel appointment within specific days",
+            "get": {
+                "summary": "get healer cancel fee",
+                "description": "Get the cancel fee of specific healer. Get request should be for example /cancel-fee?healer=1",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "healer",
+                        "type": "integer",
+                        "example": "1"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "healer cancel fee",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/cancelFee"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/NotFound"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/BadRequest"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/Unauthorized"
+                    }
+                }
+            },
+            "post": {
+                "summary": "create/update healer cancel fee",
+                "description": "update the cancel fee of specific healer",
+                "security": [{
+                    "bearerAuth": []
+                }],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/cancelFee"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "cancel fee has been updated successfully"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/NotFound"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/BadRequest"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/Unauthorized"
+                    }
+                }
+            }
+        },
+        "/diaries": {
+            "summary": "Healing diaries for client",
+            "get": {
+                "summary": "Get a diary",
+                "description": "Get a diary based on date. The url should be: '/diaries?date=2021-02-30'",
+                "security": [{
+                    "bearerAuth": []
+                }],
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "date",
+                        "type": "string",
+                        "format": "YYYY-MM-DD",
+                        "description": "the date of diary. format should be: YYYY-MM-DD"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "New healing diary has been created.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/createdHealingDiary"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/Unauthorized"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/BadRequest"
+                    }
+                }
+            },
+            "post": {
+                "summary": "Create or update diary",
+                "security": [{
+                    "bearerAuth": []
+                }],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/newHealingDiary"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "New healing diary has been created.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/createdHealingDiary"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "The diary has been updated"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/Unauthorized"
+                    },
+                    "400": {
+                        "description": "Invalid request or duplicated diary date."
+                    }                    
+                }
+            }
+        }
+    }
+}
