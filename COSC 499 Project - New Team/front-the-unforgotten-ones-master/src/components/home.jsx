@@ -27,6 +27,7 @@ import MoreButton from './comps/moreButton';
 import PageTitle from './comps/pgTitle';
 import SmallClearButton from './comps/smlClearButton';
 import { isFirstDayOfMonth } from 'date-fns/esm';
+import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
   text: {
@@ -229,6 +230,10 @@ function Home() {
               contents="Learn More"
             />
             <SmallClearButton
+              href={'/healers/' + userid}
+              contents="Learn More"
+            />
+            <SmallClearButton
               href="https://www.facebook.com/"
               contents="Share"
             />
@@ -253,6 +258,7 @@ function Home() {
           name="healName"
         />
         <button type="submit">Search</button>
+        <Link to={'./Dashboard'}>Admin Search</Link>
       </form>
     );
   };

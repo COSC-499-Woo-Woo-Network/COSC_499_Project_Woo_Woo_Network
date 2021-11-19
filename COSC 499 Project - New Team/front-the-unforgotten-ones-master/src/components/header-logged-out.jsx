@@ -33,6 +33,10 @@ const headersDataLoggedOut = [
     label: 'Login',
     href: '/login',
   },
+  {
+    label: 'Admin Search',
+    href: '/account-search',
+  },
 ];
 
 // Styles to be changed - made navbar responsive for mobile use

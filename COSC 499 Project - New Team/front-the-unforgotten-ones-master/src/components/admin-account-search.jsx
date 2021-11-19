@@ -1,69 +1,87 @@
 import React, { useState } from 'react';
-import { useHistory } from 'react-router-dom';
+//import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import * as yup from 'yup';
-//can change this icon later on to our logo
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+import { useHistory } from 'react-router-dom';
 import { Formik } from 'formik';
 import {
-  Avatar,
   Grid,
   Paper,
-  Typography,
-  Link,
-  CssBaseline,
+  Button,
   Box,
+  Link,
+  Checkbox,
+  CssBaseline,
+  FormControlLabel,
   makeStyles,
 } from '@material-ui/core';
+import FavoriteBorder from '@material-ui/icons/FavoriteBorder';
 import SmallTextField from './comps/smlTextField';
-import DefaultButton from './comps/defButton';
+import Copyright from './copyright.jsx';
 import PageTitle from './comps/pgTitle';
-import Copyright from './copyright';
 import globalStyles from './comps/globalStyling.module.css';
 
-// /** This is the Yup schema for login credentials - it verifies if format is valid for email and password requirements */
 const schema = yup.object({
-  email: yup
+  // Schema says what's allowed in the forms and what's not.
+  firstName: yup
     .string()
-    .email('Invalid email')
-    .required('Please enter an email address'),
-  password: yup.string().required('A password is required'),
+    .trim()
+    .min(2, 'Your name must be at least 2 characters!')
+    .max(20, 'Your name cannot be more than 20 characters.')
+    .matches(
+      /^[a-zA-Z]+$/,
+      'Invalid name. Use Upper or Lowercase letters only.'
+    )
+    .required('Your first name is required'),
+  lastName: yup
+    .string()
+    .trim()
+    .min(2, 'Your name must be at least 2 characters!')
+    .max(20, 'Your name cannot be more than 20 characters.')
+    .matches(
+      /^[a-zA-Z]+$/,
+      'Invalid name. Use Upper or Lowercase letters only.'
+    )
+    .required('Your last name is required'),
+  email: yup.string().email().required('Please enter an email address'),
+  password: yup
+    .string()
+    .min(6, 'Your password must be at least 6 characters')
+    .required('A password is required'),
+  passwordConfirm: yup
+    .string()
+    .oneOf([yup.ref('password'), null], 'Passwords must match')
+    .required('Please confirm your password'),
 });
-
-const { search } = window.location;
-const query = new URLSearchParams(search).get('userName');
 
 /** This is the theme for the items on this page - nav bar not included - STYLING here! */
 const useStyles = makeStyles((theme) => ({
   center: {
     display: 'flex',
     alignItems: 'center',
-    height: '110vh',
-  },
-  root: {
-    backgroundColor: theme.palette.secondary.main,
-    padding: theme.spacing(4, 3),
-    boxShadow: '0px 2px 6px rgba(0, 0, 0, 0.25)',
-    borderRadius: '10px',
+    height: '135vh',
   },
   avatar: {
     margin: theme.spacing(1),
     backgroundColor: theme.palette.primary.main,
   },
+  submit: {
+    margin: theme.spacing(3, 0, 2),
+  },
+
   form: {
     width: '100%',
-    marginTop: theme.spacing(2),
   },
 }));
 
-/** This is the Login Form - only the form */
-const LoginForm = (props) => {
+const SignUpForm = (props) => {
   const classes = useStyles();
+
   const {
-    values: { email },
+    values: { email, password, firstName, lastName, isHealer, passwordConfirm },
     errors,
     touched,
-    handleSubmit,
     handleChange,
+    handleSubmit,
     isValid,
     setFieldTouched,
   } = props;
@@ -74,18 +92,45 @@ const LoginForm = (props) => {
     setFieldTouched(name, true, false);
   };
 
-
   return (
     <form className={classes.form} onSubmit={handleSubmit}>
       <Grid container spacing={2}>
-        <Grid item xs={12}>
+        <Grid item xs={12} sm={6}>
+          <SmallTextField
+            id="firstName"
+            label="First Name"
+            autoComplete="fname"
+            autoFocus
+            required
+            fullWidth
+            value={firstName}
+            helperText={touched.firstName ? errors.firstName : ''}
+            error={touched.firstName && Boolean(errors.firstName)}
+            // onChange={(e) => setFirstName(e.target.value)}
+            onChange={change.bind(null, 'firstName')}
+          />
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <SmallTextField
+            id="lastName"
+            label="Last Name"
+            autoComplete="lname"
+            required
+            fullWidth
+            value={lastName}
+            helperText={touched.lastName ? errors.lastName : ''}
+            error={touched.lastName && Boolean(errors.lastName)}
+            onChange={change.bind(null, 'lastName')}
+            // onChange={(e) => setLastName(e.target.value)}
+          />
+        </Grid>
+        <Grid item xs={12} margintop="8px" marginbottom="8px">
           <SmallTextField
             id="email"
             label="Email"
             type="email"
             name="email"
             autoComplete="email"
-            autoFocus
             required
             fullWidth
             value={email}
@@ -95,69 +140,147 @@ const LoginForm = (props) => {
             // onChange={(e) => setEmail(e.target.value)}
           />
         </Grid>
-        <Grid item xs={12}>
-          <DefaultButton
-            type="submit"
+        <Grid item xs={12} paddingbottom="0">
+          <SmallTextField
+            label="Password"
+            type="password"
+            name="password"
+            id="password"
+            autoComplete="current-password"
+            required
             fullWidth
-            // Button will be disabled if anything is wrong
-            disabled={!isValid}
-            style={{ margin: '24px 0 24px 0' }}
-            contents="Sign In"
+            value={password}
+            helperText={touched.password ? errors.password : ''}
+            error={touched.password && Boolean(errors.password)}
+            onChange={change.bind(null, 'password')}
+            // onChange={(e) => setPassword(e.target.value)}
           />
+        </Grid>
+        <Grid item xs={12} paddingtop="0">
+          <SmallTextField
+            label="Confirm Password"
+            type="password"
+            name="passwordConfirm"
+            id="passwordConfirm"
+            autoComplete="current-password-confirm"
+            required
+            fullWidth
+            value={passwordConfirm}
+            helperText={touched.passwordConfirm ? errors.passwordConfirm : ''}
+            error={touched.passwordConfirm && Boolean(errors.passwordConfirm)}
+            onChange={change.bind(null, 'passwordConfirm')}
+            // onChange={(e) => setPassword(e.target.value)}
+          />
+        </Grid>
+        <Grid item xs={12} paddingleft="24px">
+          <FormControlLabel
+            control={
+              <Checkbox
+                color="primary"
+                icon={<FavoriteBorder />}
+                name="isHealer"
+                checked={isHealer}
+                onChange={change.bind(null, 'isHealer')}
+                value={isHealer}
+              />
+            }
+            label="Are you a healer?"
+          />
+        </Grid>
+      </Grid>
+      <Button
+        type="submit"
+        fullWidth
+        variant="contained"
+        color="primary"
+        className={classes.submit}
+        // Button will be disabled if anything is wrong
+        disabled={!isValid}
+      >
+        Sign Up
+      </Button>
+      <Grid container justify="flex-end">
+        <Grid item>
+          <Link href="/login" variant="body2">
+            Already have an account? Sign in
+          </Link>
         </Grid>
       </Grid>
     </form>
   );
 };
 
+/*  This page is the one that renders when you press "Create Account" in the header. It's mostly just a big form.
+Note: This doesn't log you in after you create the account. maybe that should be added?
+*/
+function SignUp2() {
+  const classes = useStyles();
+  const [loading, setLoading] = useState(false);
+  const history = useHistory(); // let's us get sent to another page or somethin
 
-{
-  if (query == '' || query == null) {
-    for (var i = 0; i < healers.length; i++) {
-      if (healers[i].firstName.includes('')) {
-        testHealer[i] = {
-          firstName: healers[i].firstName,
-          lastName: healers[i].lastName,
-          description: healers[i].description,
-          id: healers[i].id,
-          location: healers[i].location,
-        };
-      }
-    }
-  } else {
-    var query1 = query.toLowerCase();
-    for (var i = 0; i < healers.length; i++) {
-      if (
-        healers[i].firstName.toLowerCase().includes(query1) ||
-        healers[i].lastName.toLowerCase().includes(query1) ||
-        healers[i].email.toLowerCase().includes(query1)
-      ) {
-        testHealer[i] = {
-          firstName: healers[i].firstName,
-          lastName: healers[i].lastName,
-          description: healers[i].description,
-          id: healers[i].id,
-        };
-      }
-    }
+  if (loading) {
+    return <h4>Signing up...</h4>;
   }
+
+  return (
+    <div>
+      <Paper className={`${classes.Paper} ${globalStyles.smlPgContainer}`}>
+        <CssBaseline />
+        <div className={`${classes.div} ${globalStyles.centerItems}`}>
+          {/*<Avatar className={classes.avatar}>
+            <LockOutlinedIcon />
+  </Avatar>*/}
+          <Box className={`${classes.Box} ${globalStyles.centerItems}`}>
+            <PageTitle contents="Sign Up" />
+          </Box>
+          <Formik
+            render={(props) => <SignUpForm {...props} />}
+            validationSchema={schema}
+            initialValues={{
+              email: '',
+              password: '',
+              firstName: '',
+              lastName: '',
+              // description: "",
+              // brand: "",
+              //isHealer: false,
+              //passwordConfirm: '',
+            }}
+            onSubmit={(data, { setSubmitting }) => {
+              //setSubmitting keeps track of whether you are in the midst of submitting data
+              setSubmitting(true);
+              setLoading(true);
+              (async () => {
+                try {
+                  const response = await fetch(
+                    process.env.REACT_APP_API_DOMAIN + '/users',
+                    {
+                      method: 'POST',
+                      mode: 'cors',
+                      headers: {
+                        'Content-Type': 'application/json;charset=utf-8',
+                      },
+                      body: JSON.stringify(data),
+                    }
+                  );
+                  if (response.status == 201) {
+                    history.push('/login'); // sends you to the login page after you make the account
+                  } else {
+                    alert('Email already exists.');
+                  }
+                  //maybe I should make it test to see if the account actually gets made but... no time!
+                } catch (error) {
+                  console.log('Fetch API error - post' + error);
+                }
+              })();
+              setLoading(false);
+              setSubmitting(false);
+            }}
+          />
+        </div>
+      </Paper>
+      <Copyright />
+    </div>
+  );
 }
-
-React.useEffect(() => {
-  // Fetches the array of healers to show on screen.
-  (async () => {
-    try {
-      const response = await fetch(
-        process.env.REACT_APP_API_DOMAIN + '/healers'
-      );
-      if (!response.ok)
-        throw Error(response.status + ': ' + response.statusText); // error checking, is the data okay?
-      const data = await response.json(); // transform the data from string into JSON format.
-      setHealers(() => data);
-    } catch (Error) {
-      console.log(Error);
-    }
-  })();
-}, []);
-
- 
+export default SignUp2;
