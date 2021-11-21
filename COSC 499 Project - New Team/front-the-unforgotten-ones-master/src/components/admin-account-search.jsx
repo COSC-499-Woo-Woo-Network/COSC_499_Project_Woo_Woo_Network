@@ -19,7 +19,6 @@ import {
   useMediaQuery,
 } from '@material-ui/core';
 //import jwt_decode from 'jwt-decode';
-import backgroundImage from '../media/background.jpeg';
 import globalStyles from './comps/globalStyling.module.css';
 import DefaultButton from './comps/defButton';
 import Copyright from './copyright.jsx';
@@ -34,25 +33,6 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 12,
     [theme.breakpoints.up('md')]: {
       fontSize: 20,
-    },
-  },
-  mainFeaturedPost: {
-    position: 'relative',
-    //marginBottom: theme.spacing(4),
-    backgroundImage: 'url(https://source.unsplash.com/random)',
-    backgroundSize: 'cover',
-    backgroundRepeat: 'no-repeat',
-    height: 700,
-    '@media (max-width: 780px)': {
-      height: '100%',
-    },
-  },
-  mainFeaturedPostContent: {
-    //position: 'relative',
-    //padding: theme.spacing(3),
-    [theme.breakpoints.up('md')]: {
-      padding: theme.spacing(6),
-      paddingRight: 0,
     },
   },
   root: {
@@ -159,7 +139,7 @@ const Tag = (props) => {
  Maybe there could be a more detailed paragraph describing the site here too.
 */
 
-function Home() {
+function SignUp2() {
   const classes = useStyles();
   const [healers, setHealers] = useState([]);
 
@@ -195,30 +175,25 @@ function Home() {
     }
 
     return (
-      <Grid item xs={12} sm={6}>
+      <Grid item xs={10} sm={12}>
         <Card className={`${classes.Card} ${globalStyles.cardPaper}`}>
           <CardActionArea>
             <CardContent>
-              <Box display="flex">
-                <CardMedia
-                  className={classes.healerImage}
-                  image={healerImage}
-                  title="Healer Showcase Card"
-                />
-                <Box display="flex" flexDirection="column" textAlign="left">
-                  <Typography variant="h6">{healerName}</Typography>
-                  <Typography
-                    variant="body2"
-                    color="textSecondary"
-                    component="p"
-                  >
-                    {healerBrand}
-                  </Typography>
-                </Box>
+              <Box textAlign="center" marginTop="8px">
+                <Typography variant="h6" component="p">
+                  Name: {healerName}
+                </Typography>
+                {/*<TagSet />*/}
               </Box>
-              <Box textAlign="left" marginTop="8px">
+              <Box textAlign="center" marginTop="8px">
                 <Typography variant="body2" color="textSecondary" component="p">
-                  {healerDescriptionToShow}
+                  Brand: {healerBrand}
+                </Typography>
+                {/*<TagSet />*/}
+              </Box>
+              <Box textAlign="center" marginTop="8px">
+                <Typography variant="body2" color="textSecondary" component="p">
+                  User ID: {userid}
                 </Typography>
                 {/*<TagSet />*/}
               </Box>
@@ -229,10 +204,7 @@ function Home() {
               href={'/healers/' + userid}
               contents="Learn More"
             />
-            <SmallClearButton
-              href="https://www.facebook.com/"
-              contents="Share"
-            />
+            <SmallClearButton href={'/account-search'} contents="Delete User" />
           </CardActions>
         </Card>
       </Grid>
@@ -243,16 +215,20 @@ function Home() {
 
   const Search = () => {
     return (
-      <form action="/" method="get">
+      <form action="/account-search" method="get">
         <label htmlFor="header-search">
-          <span className="visually-hidden">Filter Healer By Name </span>
+          <span className="visually-hidden">
+            Search Users By Name or User ID:
+          </span>
         </label>
         <input
           type="text"
           id="header-search"
           placeholder="Empty Search to Clear"
-          name="healName"
+          name="input"
         />
+        <br></br>
+        <br></br>
         <button type="submit">Search</button>
       </form>
     );
@@ -263,7 +239,7 @@ function Home() {
   };
 
   const { search } = window.location;
-  const query = new URLSearchParams(search).get('healName');
+  const query = new URLSearchParams(search).get('input');
   {
     if (query == '' || query == null) {
       for (var i = 0; i < healers.length; i++) {
@@ -282,7 +258,7 @@ function Home() {
         if (
           healers[i].firstName.toLowerCase().includes(query1) ||
           healers[i].lastName.toLowerCase().includes(query1) ||
-          healers[i].description.toLowerCase().includes(query1)
+          healers[i].id == query1
         ) {
           testHealer[i] = {
             firstName: healers[i].firstName,
@@ -315,83 +291,12 @@ function Home() {
   return (
     <div style={{ textAlign: 'center' }}>
       <CssBaseline />
-      <a id="landing"></a>
-      <Box
-        className={classes.flavorImage}
-        style={{ backgroundImage: `url(${backgroundImage})` }}
-      >
-        {/* Increase the priority of the hero background image */}
-        {
-          <img
-            style={{ display: 'none' }}
-            src={backgroundImage}
-            alt="alt image line 54"
-          />
-        }
-
-        <Paper className={classes.flavorContents}>
-          <Typography variant="h3" gutterBottom color="black">
-            Global Healing Network
-          </Typography>
-          <Typography variant="h5" color="inherit" paragraph>
-            We connect clients to healers worldwide
-          </Typography>
-        </Paper>
-        <Box className={classes.buttonContainer}>
-          <Button
-            color="primary"
-            size="large"
-            href="#healers_section"
-            className={classes.healersButton}
-          >
-            Browse our Healers
-          </Button>
-        </Box>
-      </Box>
       {/* WANT TO SIGN UP SECTION */}
-      <Grid container className={classes.container}>
-        <Grid item xs={2}></Grid>
-        <Grid item xs={3}>
-          <Box className={classes.centerVertical}>
-            <div className={classes.item}>
-              <PeopleRoundedIcon />
-              <Typography variant="h5" className={classes.text}>
-                Want to make an appointment with one of our Healers?
-              </Typography>
-            </div>
-          </Box>
-        </Grid>
-        <Grid item xs={2}>
-          <Box className={classes.centerVertical} top="20px">
-            <div className={classes.item}>
-              <Typography variant="h5" color="inherit">
-                or
-              </Typography>
-            </div>
-          </Box>
-        </Grid>
-        <Grid item xs={3}>
-          <Box className={classes.centerVertical} top="0px">
-            <div className={classes.item}>
-              <FavoriteRoundedIcon />
-              <Typography variant="h5" className={classes.text}>
-                Are you a healer?
-              </Typography>
-            </div>
-          </Box>
-        </Grid>
-        <Grid item xs={2}></Grid>
-        <Grid item xs={12}>
-          <DefaultButton href="/signup" contents="Sign Up Here" />
-        </Grid>
-      </Grid>
       {/* healers info */}
       <Paper className={`${classes.Paper} ${globalStyles.defPgContainer}`}>
-        <a id="healers_section">
-          <PageTitle contents="Our Healers" />
-          <Search></Search>
-          <br></br>
-        </a>
+        <PageTitle contents="Search Accounts" />
+        <Search></Search>
+        <br></br>
         {/* <Container className={classes.container}> */}
         <Grid container spacing={3}>
           {/* MAPPING             */}
@@ -421,4 +326,4 @@ function Home() {
     </div>
   );
 }
-export default Home;
+export default SignUp2;
