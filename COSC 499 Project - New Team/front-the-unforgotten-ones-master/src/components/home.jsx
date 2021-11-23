@@ -162,7 +162,7 @@ const Tag = (props) => {
 function Home() {
   const classes = useStyles();
   const [healers, setHealers] = useState([]);
-
+  const [healerCity, setCity] = useState([]);
   const LIMIT_MOBILE = 4;
   const LIMIT_WEB = 100;
 
@@ -273,6 +273,7 @@ function Home() {
             lastName: healers[i].lastName,
             description: healers[i].description,
             id: healers[i].id,
+            brandName: healers[i].brandName,
           };
         }
       }
@@ -289,6 +290,7 @@ function Home() {
             lastName: healers[i].lastName,
             description: healers[i].description,
             id: healers[i].id,
+            brandName: healers[i].brandName,
           };
         }
       }
@@ -402,6 +404,7 @@ function Home() {
               key={testHealer + i}
               userid={testHealer.id}
               healerImage={testHealer.photo}
+              healerBrand={testHealer.brandName}
             />
           ))}
           <Grid item xs={12}>

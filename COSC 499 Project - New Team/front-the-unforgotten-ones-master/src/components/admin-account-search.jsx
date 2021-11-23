@@ -249,6 +249,7 @@ function SignUp2() {
             lastName: healers[i].lastName,
             description: healers[i].description,
             id: healers[i].id,
+            brandName: healers[i].brandName,
           };
         }
       }
@@ -265,6 +266,7 @@ function SignUp2() {
             lastName: healers[i].lastName,
             description: healers[i].description,
             id: healers[i].id,
+            brandName: healers[i].brandName,
           };
         }
       }
@@ -307,6 +309,7 @@ function SignUp2() {
               key={testHealer + i}
               userid={testHealer.id}
               healerImage={testHealer.photo}
+              healerBrand={testHealer.brandName}
             />
           ))}
           <Grid item xs={12}>
