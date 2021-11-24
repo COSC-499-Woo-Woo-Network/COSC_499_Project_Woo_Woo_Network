@@ -260,7 +260,7 @@ const HealerServices = (props) => {
           index={i}
           serviceName={service.name}
           key={service + i}
-          servicePrice={service.price}
+          servicePrice={service.price + ' ' + service.currency.toUpperCase()}
           serviceLength={service.timeLength}
           serviceDescription={service.description}
           serviceAvailability={service.isAvailableOnline}
@@ -500,6 +500,7 @@ const HealerPage = (props) => {
                       name={userName}
                       brand={userBrand}
                     />
+                    <HealerDescription description={userDesc} align="center" />
                     <HealerLocationInfo
                       address={healerAddress}
                       city={healerCity}
@@ -508,7 +509,9 @@ const HealerPage = (props) => {
                     <BookingButton healerID={healerID} />
                   </Grid>
                   <Grid item xs={6}>
-                    <HealerDescription description={userDesc} />
+                    <Typography>
+                      Click on the prices to find out more info!
+                    </Typography>
                     <HealerServices healerID={healerID} />
                   </Grid>
                 </Grid>
