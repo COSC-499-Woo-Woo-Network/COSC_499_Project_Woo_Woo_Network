@@ -260,7 +260,7 @@ const HealerServices = (props) => {
           index={i}
           serviceName={service.name}
           key={service + i}
-          servicePrice={service.price}
+          servicePrice={service.price + ' ' + service.currency.toUpperCase()}
           serviceLength={service.timeLength}
           serviceDescription={service.description}
           serviceAvailability={service.isAvailableOnline}
@@ -293,9 +293,9 @@ const ServiceListItem = (props) => {
           <Grid item xs={6}>
             <Typography variant="body1">{props.serviceName}</Typography>
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={20}>
             <Typography align="right" variant="body1">
-              ${props.servicePrice}
+              {props.serviceLength} Minutes ${props.servicePrice}
             </Typography>
           </Grid>
         </Grid>
@@ -303,9 +303,9 @@ const ServiceListItem = (props) => {
       {showComponent ? (
         <ServiceListItem_Selected
           serviceName={props.serviceName}
-          servicePrice={props.servicePrice}
-          serviceLength={props.serviceLength}
-          serviceDescription={props.serviceDescription}
+          //servicePrice={props.servicePrice}
+          //serviceLength={props.serviceLength}
+          //serviceDescription={props.serviceDescription}
           serviceAvailability={props.serviceAvailability}
         />
       ) : null}
@@ -322,7 +322,7 @@ const ServiceListItem_Selected = (props) => {
         <Grid container spacing={0}>
           <Grid item xs={12}>
             <Typography align="right" variant="body1">
-              ${props.servicePrice}
+              {props.servicePrice}
             </Typography>
           </Grid>
         </Grid>
@@ -335,7 +335,10 @@ const ServiceListItem_Selected = (props) => {
           </Typography>
         </Grid>
         <Grid item xs={12} className={classes.transparent}>
-          <Typography variant="body2">{props.serviceLength} minutes</Typography>
+          <Typography variant="body2">
+            {props.serviceLength}
+            Description
+          </Typography>
         </Grid>
       </Grid>
     </ListItem>
@@ -500,6 +503,7 @@ const HealerPage = (props) => {
                       name={userName}
                       brand={userBrand}
                     />
+                    <HealerDescription description={userDesc} align="center" />
                     <HealerLocationInfo
                       address={healerAddress}
                       city={healerCity}
@@ -508,7 +512,9 @@ const HealerPage = (props) => {
                     <BookingButton healerID={healerID} />
                   </Grid>
                   <Grid item xs={6}>
-                    <HealerDescription description={userDesc} />
+                    <Typography>
+                      Click on the prices to find out more info!
+                    </Typography>
                     <HealerServices healerID={healerID} />
                   </Grid>
                 </Grid>
