@@ -234,7 +234,7 @@ const HealerServices = (props) => {
         // fetches the user data for this healer.
         const response = await fetch(
           process.env.REACT_APP_API_DOMAIN +
-            '/services?healer=' +
+            '/services?healer=1' +
             props.healerID,
           {
             method: 'GET',
@@ -260,7 +260,7 @@ const HealerServices = (props) => {
           index={i}
           serviceName={service.name}
           key={service + i}
-          servicePrice={service.price + ' ' + service.currency.toUpperCase()}
+          servicePrice={service.price}
           serviceLength={service.timeLength}
           serviceDescription={service.description}
           serviceAvailability={service.isAvailableOnline}
@@ -293,9 +293,9 @@ const ServiceListItem = (props) => {
           <Grid item xs={6}>
             <Typography variant="body1">{props.serviceName}</Typography>
           </Grid>
-          <Grid item xs={20}>
+          <Grid item xs={6}>
             <Typography align="right" variant="body1">
-              {props.serviceLength} Minutes ${props.servicePrice}
+              ${props.servicePrice}
             </Typography>
           </Grid>
         </Grid>
@@ -303,9 +303,9 @@ const ServiceListItem = (props) => {
       {showComponent ? (
         <ServiceListItem_Selected
           serviceName={props.serviceName}
-          //servicePrice={props.servicePrice}
-          //serviceLength={props.serviceLength}
-          //serviceDescription={props.serviceDescription}
+          servicePrice={props.servicePrice}
+          serviceLength={props.serviceLength}
+          serviceDescription={props.serviceDescription}
           serviceAvailability={props.serviceAvailability}
         />
       ) : null}
@@ -322,7 +322,7 @@ const ServiceListItem_Selected = (props) => {
         <Grid container spacing={0}>
           <Grid item xs={12}>
             <Typography align="right" variant="body1">
-              {props.servicePrice}
+              ${props.servicePrice}
             </Typography>
           </Grid>
         </Grid>
@@ -335,10 +335,7 @@ const ServiceListItem_Selected = (props) => {
           </Typography>
         </Grid>
         <Grid item xs={12} className={classes.transparent}>
-          <Typography variant="body2">
-            {props.serviceLength}
-            Description
-          </Typography>
+          <Typography variant="body2">{props.serviceLength} minutes</Typography>
         </Grid>
       </Grid>
     </ListItem>
@@ -360,7 +357,7 @@ const BookingButton = (props) => {
   );
 };
 
-const HealerPage = (props) => {
+const testFile = (props) => {
   const LIMIT_MOBILE = 4;
   const LIMIT_WEB = 8;
 
@@ -380,6 +377,7 @@ const HealerPage = (props) => {
   const [healerAddress, setAddress] = React.useState(String);
   const [healerCity, setCity] = React.useState(String);
   const [healerProvince, setProvince] = React.useState(String);
+  const [testcity, setTest] = React.useState([]);
   // const healerID = window.location.pathname.charAt(
   //   window.location.pathname.length - 1
   // );
@@ -391,7 +389,7 @@ const HealerPage = (props) => {
       try {
         // fetches the user data for this healer.
         const response = await fetch(
-          process.env.REACT_APP_API_DOMAIN + window.location.pathname,
+          process.env.REACT_APP_API_DOMAIN + '/healers/1',
           {
             method: 'GET',
             headers: {
@@ -410,16 +408,46 @@ const HealerPage = (props) => {
         }
         setName(data.firstName + ' ' + data.lastName);
         setBrand(data.brandName);
-        setAddress(data.location.address);
-        setCity(data.location.city);
-        setProvince(data.location.province);
-        setDesc(data.description);
+        //setAddress(data.location.address);
+        //setCity(data.location.city);
+        //setProvince(data.location.province);
+        //setDesc(data.description);
       } catch (Error) {
         console.log(Error);
       }
     })();
   }, []);
 
+  var cityArray = [];
+  var a;
+  React.useEffect(() => {
+    // This fills the form with your current user data.
+    for (var i = 1; i < 10; i++) {
+      (async () => {
+        try {
+          const response = await fetch(
+            process.env.REACT_APP_API_DOMAIN + '/healers/' + i,
+            {
+              method: 'GET',
+              headers: {
+                Authorization: 'Bearer ' + aToken,
+                'Content-Type': 'application/json',
+              },
+            }
+          );
+          if (!response.ok)
+            throw Error(response.status + ': ' + response.statusText); // error checking, is the data okay?
+          const data = await response.json(); // transform the data from string into JSON format.
+          setTest(data.location.city);
+          a = data.location.city;
+          cityArray.push(a);
+        } catch (Error) {
+          console.log(Error);
+        }
+      })();
+    }
+    console.log(cityArray);
+  }, []);
   //CALL TO REVIEWS ENDPOINT TO RETRIEVE INFORMATION
   const [reviews, setReviews] = useState([]);
 
@@ -448,7 +476,7 @@ const HealerPage = (props) => {
   }, []);
 
   const classes = useStyles();
-  console.log(healerID);
+  //console.log(healerID);
 
   return (
     <div>
@@ -503,7 +531,6 @@ const HealerPage = (props) => {
                       name={userName}
                       brand={userBrand}
                     />
-                    <HealerDescription description={userDesc} align="center" />
                     <HealerLocationInfo
                       address={healerAddress}
                       city={healerCity}
@@ -512,14 +539,13 @@ const HealerPage = (props) => {
                     <BookingButton healerID={healerID} />
                   </Grid>
                   <Grid item xs={6}>
-                    <Typography>
-                      Click on the prices to find out more info!
-                    </Typography>
+                    <HealerDescription description={userDesc} />
                     <HealerServices healerID={healerID} />
                   </Grid>
                 </Grid>
                 <Box className={`${classes.Box} ${globalStyles.centerItems}`}>
                   <Typography variant="h6">Reviews</Typography>
+                  <Typography variant="p">{testcity}</Typography>
                 </Box>
                 <Grid container spacing={3}>
                   {reviews.slice(0, limit).map((healerReview, i) => (
@@ -549,4 +575,4 @@ const HealerPage = (props) => {
     </div>
   );
 };
-export default HealerPage;
+export default testFile;
