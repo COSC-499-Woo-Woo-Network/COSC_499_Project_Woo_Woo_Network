@@ -293,9 +293,9 @@ const ServiceListItem = (props) => {
           <Grid item xs={6}>
             <Typography variant="body1">{props.serviceName}</Typography>
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={20}>
             <Typography align="right" variant="body1">
-              ${props.servicePrice}
+              {props.serviceLength} Minutes ${props.servicePrice}
             </Typography>
           </Grid>
         </Grid>
@@ -303,9 +303,9 @@ const ServiceListItem = (props) => {
       {showComponent ? (
         <ServiceListItem_Selected
           serviceName={props.serviceName}
-          servicePrice={props.servicePrice}
-          serviceLength={props.serviceLength}
-          serviceDescription={props.serviceDescription}
+          //servicePrice={props.servicePrice}
+          //serviceLength={props.serviceLength}
+          //serviceDescription={props.serviceDescription}
           serviceAvailability={props.serviceAvailability}
         />
       ) : null}
@@ -322,7 +322,7 @@ const ServiceListItem_Selected = (props) => {
         <Grid container spacing={0}>
           <Grid item xs={12}>
             <Typography align="right" variant="body1">
-              ${props.servicePrice}
+              {props.servicePrice}
             </Typography>
           </Grid>
         </Grid>
@@ -335,7 +335,10 @@ const ServiceListItem_Selected = (props) => {
           </Typography>
         </Grid>
         <Grid item xs={12} className={classes.transparent}>
-          <Typography variant="body2">{props.serviceLength} minutes</Typography>
+          <Typography variant="body2">
+            {props.serviceLength}
+            Description
+          </Typography>
         </Grid>
       </Grid>
     </ListItem>
