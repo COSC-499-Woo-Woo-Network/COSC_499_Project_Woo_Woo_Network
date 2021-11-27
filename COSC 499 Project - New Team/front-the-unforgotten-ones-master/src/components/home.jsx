@@ -244,7 +244,7 @@ function Home() {
   //Search bar placement
   const Search = () => {
     return (
-      <form action="/" method="get">
+      <form action="/home#healers_section" method="get">
         <label htmlFor="header-search">
           <span className="visually-hidden">Filter Healer By Name </span>
         </label>
