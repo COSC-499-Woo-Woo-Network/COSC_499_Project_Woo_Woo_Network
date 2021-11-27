@@ -11,3 +11,4 @@
 - Put together video on peer testing (due friday)
 
 ### Meeting with Kimberlee (Nov 26):
+- Talked about the login issue. Hassan will help Kimberlee draft a message to the previous group for assistance
