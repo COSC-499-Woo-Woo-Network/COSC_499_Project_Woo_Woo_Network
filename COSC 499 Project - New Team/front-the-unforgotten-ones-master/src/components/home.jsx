@@ -241,9 +241,10 @@ function Home() {
 
   let testHealer = [];
 
+  //Search bar placement
   const Search = () => {
     return (
-      <form action="/" method="get">
+      <form action="/home#healers_section" method="get">
         <label htmlFor="header-search">
           <span className="visually-hidden">Filter Healer By Name </span>
         </label>
@@ -262,6 +263,7 @@ function Home() {
     return <Search />;
   };
 
+  //Can search by first name, last name, description, id, and brandname
   const { search } = window.location;
   const query = new URLSearchParams(search).get('healName');
   {
