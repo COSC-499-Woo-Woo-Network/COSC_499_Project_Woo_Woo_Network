@@ -162,10 +162,9 @@ const Tag = (props) => {
 function Home() {
   const classes = useStyles();
   const [healers, setHealers] = useState([]);
-  const [healerCity, setCity] = useState([]);
   const LIMIT_MOBILE = 4;
   const LIMIT_WEB = 100;
-
+  var cities = [];
   const isMobile = useMediaQuery('500');
   const inititalLimit = isMobile ? LIMIT_MOBILE : LIMIT_WEB;
 
@@ -180,6 +179,9 @@ function Home() {
     userid,
     healerImage,
     healerBrand,
+    healerCity,
+    healerProvince,
+    healerCountry,
   }) {
     const limit = 60;
     var healerDescriptionToShow = healerDesc;
@@ -221,6 +223,11 @@ function Home() {
                   {healerDescriptionToShow}
                 </Typography>
                 {/*<TagSet />*/}
+              </Box>
+              <Box textAlign="left" marginTop="8px">
+                <Typography variant="body2" color="textSecondary" component="p">
+                  {healerCity + ', ' + healerProvince + ', ' + healerCountry}
+                </Typography>
               </Box>
             </CardContent>
           </CardActionArea>
@@ -273,9 +280,12 @@ function Home() {
           testHealer[i] = {
             firstName: healers[i].firstName,
             lastName: healers[i].lastName,
-            description: healers[i].description,
-            id: healers[i].id,
-            brandName: healers[i].brandName,
+            description: healers[i].account.description,
+            id: healers[i].account.id,
+            brandName: healers[i].account.brandName,
+            city: healers[i].Location.city,
+            province: healers[i].Location.province,
+            country: healers[i].Location.country,
           };
         }
       }
@@ -285,14 +295,20 @@ function Home() {
         if (
           healers[i].firstName.toLowerCase().includes(query1) ||
           healers[i].lastName.toLowerCase().includes(query1) ||
-          healers[i].description.toLowerCase().includes(query1)
+          healers[i].account.description.toLowerCase().includes(query1) ||
+          healers[i].Location.city.toLowerCase().includes(query1) ||
+          healers[i].Location.province.toLowerCase().includes(query1) ||
+          healers[i].Location.country.toLowerCase().includes(query1)
         ) {
           testHealer[i] = {
             firstName: healers[i].firstName,
             lastName: healers[i].lastName,
-            description: healers[i].description,
-            id: healers[i].id,
-            brandName: healers[i].brandName,
+            description: healers[i].account.description,
+            id: healers[i].account.id,
+            brandName: healers[i].account.brandName,
+            city: healers[i].Location.city,
+            province: healers[i].Location.province,
+            country: healers[i].Location.country,
           };
         }
       }
@@ -304,11 +320,13 @@ function Home() {
     (async () => {
       try {
         const response = await fetch(
-          process.env.REACT_APP_API_DOMAIN + '/healers'
+          process.env.REACT_APP_API_DOMAIN + '/healers/location'
         );
+
         if (!response.ok)
           throw Error(response.status + ': ' + response.statusText); // error checking, is the data okay?
         const data = await response.json(); // transform the data from string into JSON format.
+        console.log(data);
         setHealers(() => data);
       } catch (Error) {
         console.log(Error);
@@ -407,6 +425,9 @@ function Home() {
               userid={testHealer.id}
               healerImage={testHealer.photo}
               healerBrand={testHealer.brandName}
+              healerCity={testHealer.city}
+              healerProvince={testHealer.province}
+              healerCountry={testHealer.country}
             />
           ))}
           <Grid item xs={12}>
