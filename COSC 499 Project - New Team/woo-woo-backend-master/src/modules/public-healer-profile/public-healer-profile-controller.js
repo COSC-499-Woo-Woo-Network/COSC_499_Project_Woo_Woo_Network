@@ -18,6 +18,20 @@ const getPublicHealerList = async (req, res, next) => {
   }
 };
 
+const getPublicLocationList = async (req, res, next) => {
+  try {
+    // limit and start is for pagination purpose
+    const { limit, start } = req.query;
+    const healerList = await publicHealerProfileHelper.getLocationList(
+      limit,
+      start
+    );
+    res.status(200).json(healerList);
+  } catch (err) {
+    next(err);
+  }
+};
+
 /**
  * Get a healer profile based on healer profile id
  */
@@ -39,5 +53,6 @@ const getPublicHealerProfile = async (req, res, next) => {
 
 export default {
   getPublicHealerList,
+  getPublicLocationList,
   getPublicHealerProfile,
 };
