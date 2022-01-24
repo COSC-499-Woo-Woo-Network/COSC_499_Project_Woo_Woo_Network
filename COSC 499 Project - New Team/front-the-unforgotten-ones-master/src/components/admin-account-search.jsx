@@ -142,7 +142,7 @@ const Tag = (props) => {
 function SignUp2() {
   const classes = useStyles();
   const [healers, setHealers] = useState([]);
-
+  const [healerEmail, setEmail] = useState([]);
   const LIMIT_MOBILE = 4;
   const LIMIT_WEB = 100;
 
@@ -160,6 +160,7 @@ function SignUp2() {
     userid,
     healerImage,
     healerBrand,
+    healerEmail,
   }) {
     const limit = 60;
     var healerDescriptionToShow = healerDesc;
@@ -197,6 +198,12 @@ function SignUp2() {
                 </Typography>
                 {/*<TagSet />*/}
               </Box>
+              <Box textAlign="center" marginTop="8px">
+                <Typography variant="body2" color="textSecondary" component="p">
+                  {healerEmail}
+                </Typography>
+                {/*<TagSet />*/}
+              </Box>
             </CardContent>
           </CardActionArea>
           <CardActions>
@@ -228,6 +235,7 @@ function SignUp2() {
           name="input"
         />
         <br></br>
+        <p>Search by User ID to display healer email</p>
         <br></br>
         <button type="submit">Search</button>
       </form>
@@ -249,6 +257,8 @@ function SignUp2() {
             lastName: healers[i].lastName,
             description: healers[i].description,
             id: healers[i].id,
+            brandName: healers[i].brandName,
+            email: '',
           };
         }
       }
@@ -265,6 +275,8 @@ function SignUp2() {
             lastName: healers[i].lastName,
             description: healers[i].description,
             id: healers[i].id,
+            brandName: healers[i].brandName,
+            email: '',
           };
         }
       }
@@ -282,6 +294,24 @@ function SignUp2() {
           throw Error(response.status + ': ' + response.statusText); // error checking, is the data okay?
         const data = await response.json(); // transform the data from string into JSON format.
         setHealers(() => data);
+      } catch (Error) {
+        console.log(Error);
+      }
+    })();
+  }, []);
+
+  React.useEffect(() => {
+    // Fetches the array of healers to show on screen.
+    (async () => {
+      try {
+        const response = await fetch(
+          process.env.REACT_APP_API_DOMAIN + '/healers/' + query
+        );
+        if (!response.ok)
+          throw Error(response.status + ': ' + response.statusText); // error checking, is the data okay?
+        const data = await response.json(); // transform the data from string into JSON format.
+        console.log(data);
+        setEmail(data.email);
       } catch (Error) {
         console.log(Error);
       }
@@ -307,6 +337,8 @@ function SignUp2() {
               key={testHealer + i}
               userid={testHealer.id}
               healerImage={testHealer.photo}
+              healerBrand={testHealer.brandName}
+              healerEmail={healerEmail}
             />
           ))}
           <Grid item xs={12}>

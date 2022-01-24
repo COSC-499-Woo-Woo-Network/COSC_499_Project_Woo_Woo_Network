@@ -31,6 +31,10 @@ const NoAuthSite = (props) => {
           <Route exact path="/login" component={LoginPage}></Route>
           <Route exact path="/signup" component={SignUp}></Route>
           <Route exact path="/account-search" component={SignUp2}></Route>
+<<<<<<< HEAD
+=======
+          <Route exact path="/test/:id" component={testFile}></Route>
+>>>>>>> origin/master
           <Route
             exact
             path="/forgot-password"

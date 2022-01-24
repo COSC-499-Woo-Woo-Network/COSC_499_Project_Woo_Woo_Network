@@ -57,6 +57,55 @@ const getHealerList = async (limit, start) => {
   return healerList;
 };
 
+const getLocationList = async (limit, start) => {
+  let location = [];
+
+  if (limit) {
+    location = await db.User.findAll({
+      attributes: ['firstName', 'lastName'],
+      include: [
+        {
+          model: db.Location,
+          as: 'Location',
+          attributes: ['address', 'city', 'province', 'country', 'postalCode', 'userId'],
+        },
+        {
+          model: db.HealerProfile,
+          as: 'account',
+          attributes: ['id', 'description','brandName'],
+        },
+      ],
+      offset: start ? start : 0,
+      limit: limit ? limit : 10,
+    });
+  } else {
+    location = await db.User.findAll({
+      attributes: ['firstName', 'lastName'],
+      include: [
+        {
+          model: db.Location,
+          as: 'Location',
+          attributes: ['address', 'city', 'province', 'country', 'postalCode', 'userId'],
+        },
+        {
+          model: db.HealerProfile,
+          as: 'account',
+          attributes: ['id', 'description','brandName'],
+        },
+      ],
+      offset: start ? start : 0,
+      limit: limit ? limit : 10,
+    });
+  }
+  // const locationList = location.map((healer) => {
+  //   const { account, ...profile } = healer.dataValues;
+  //   return {
+  //     ...profile,
+  //   };
+  // });
+  return location;
+};
+
 /**
  * Get healer profile information based on healer profile id
  */
@@ -105,5 +154,6 @@ const getHealerProfile = async (id) => {
 
 export default {
   getHealerList,
+  getLocationList,
   getHealerProfile,
 };
