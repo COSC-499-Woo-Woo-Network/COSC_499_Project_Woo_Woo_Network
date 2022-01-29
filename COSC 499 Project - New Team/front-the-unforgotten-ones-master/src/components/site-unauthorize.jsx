@@ -12,7 +12,6 @@ import AboutUs from './about-us';
 import PrivacyPolicy from './privacy-policy';
 import jwt_decode from 'jwt-decode';
 import SignUp2 from './admin-account-search.jsx';
-import testFile from './testFile';
 /**  This component renders when you are not logged in. It has the login and signup pages,
   while the logged-in version would not have these. You can still look at healer pages
   while not logged in.
@@ -32,7 +31,10 @@ const NoAuthSite = (props) => {
           <Route exact path="/login" component={LoginPage}></Route>
           <Route exact path="/signup" component={SignUp}></Route>
           <Route exact path="/account-search" component={SignUp2}></Route>
+<<<<<<< HEAD
+=======
           <Route exact path="/test/:id" component={testFile}></Route>
+>>>>>>> origin/master
           <Route
             exact
             path="/forgot-password"
