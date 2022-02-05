@@ -413,6 +413,8 @@ function Home() {
           <PageTitle contents="Our Healers" />
           <Search></Search>
           <br></br>
+          <p>OR</p>
+          <DefaultButton href="/map" contents="Browse by Map" />
         </a>
         {/* <Container className={classes.container}> */}
         <Grid container spacing={3}>
