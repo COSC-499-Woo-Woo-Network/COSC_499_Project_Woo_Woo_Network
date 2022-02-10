@@ -1,4 +1,4 @@
-import React, { useState, Suspense } from 'react';
+import React, { useState } from 'react';
 import Geocoder from 'react-native-geocoding';
 import {
   GoogleMap,
@@ -12,20 +12,16 @@ import DefaultButton from './comps/defButton';
 Geocoder.init('AIzaSyBLoF_U9lWDY7E6ED1tVXUEQgLv2ydvWI0');
 
 const containerStyle = {
-  width: '500px',
+  width: '700px',
   height: '500px',
 };
 
 const center = {
   lat: 41.824,
-  lng: -71.412,
+  lng: -62.412,
 };
 
-function sleep(s) {
-  var currentTime = new Date().getTime();
-  while (currentTime + s >= new Date().getTime()) {}
-}
-
+//This function returns a list of healers with their id, and coordinates for the markers
 function getInfo() {
   const [test, setTest] = useState([]);
   var markers = {};
@@ -38,8 +34,8 @@ function getInfo() {
         );
 
         if (!response.ok)
-          throw Error(response.status + ': ' + response.statusText); // error checking, is the data okay?
-        const data = await response.json(); // transform the data from string into JSON format.
+          throw Error(response.status + ': ' + response.statusText);
+        const data = await response.json();
         console.log(data.length);
         data.slice(0, data.length).map((i) =>
           Geocoder.from(i.Location.city)
@@ -61,6 +57,7 @@ function getInfo() {
               markers[fname] = marker;
               size = Object.keys(markers).length;
               console.log(size);
+              //Depending on your seed data, you may need to play around with the if statement
               if (size > data.length - 1) {
                 setTest(() => markers);
               }
@@ -76,8 +73,8 @@ function getInfo() {
 }
 
 const Maps = () => {
-  const [selectedHealer, setSelectedHealer] = useState(null);
-  var b = [];
+  const [selectedHealer, setSelectedHealer] = useState(null); //This is used to track which marker has been clicked
+  var b = []; //This variable will hold the data to be iterated over
   var a = getInfo();
   if (Object.keys(a).length != 0) {
     for (var i = 0; i < Object.keys(a).length; i++) {
@@ -85,39 +82,44 @@ const Maps = () => {
     }
     return (
       <>
-        <LoadScript googleMapsApiKey="AIzaSyBLoF_U9lWDY7E6ED1tVXUEQgLv2ydvWI0"></LoadScript>
-        <GoogleMap mapContainerStyle={containerStyle} center={center} zoom={2}>
-          {console.log(b)}
-          {b.map((i) => (
-            <Marker
-              key={i.id}
-              position={{ lat: i.latitude, lng: i.longitude }}
-              onClick={() => {
-                setSelectedHealer(i);
-              }}
-            />
-          ))}
-          {selectedHealer && (
-            <InfoWindow
-              position={{
-                lat: selectedHealer.latitude,
-                lng: selectedHealer.longitude,
-              }}
-              onCloseClick={() => {
-                setSelectedHealer(null);
-              }}
-            >
-              <div>
-                <DefaultButton
-                  href={'/healers/' + selectedHealer.id}
-                  contents={
-                    selectedHealer.firstName + ' ' + selectedHealer.lastName
-                  }
-                />
-              </div>
-            </InfoWindow>
-          )}
-        </GoogleMap>
+        <LoadScript googleMapsApiKey="AIzaSyBLoF_U9lWDY7E6ED1tVXUEQgLv2ydvWI0">
+          <GoogleMap
+            mapContainerStyle={containerStyle}
+            center={center}
+            zoom={2}
+          >
+            {console.log(b)}
+            {b.map((i) => (
+              <Marker
+                key={i.id}
+                position={{ lat: i.latitude, lng: i.longitude }}
+                onClick={() => {
+                  setSelectedHealer(i);
+                }}
+              />
+            ))}
+            {selectedHealer && (
+              <InfoWindow
+                position={{
+                  lat: selectedHealer.latitude,
+                  lng: selectedHealer.longitude,
+                }}
+                onCloseClick={() => {
+                  setSelectedHealer(null);
+                }}
+              >
+                <div>
+                  <DefaultButton
+                    href={'/healers/' + selectedHealer.id}
+                    contents={
+                      selectedHealer.firstName + ' ' + selectedHealer.lastName
+                    }
+                  />
+                </div>
+              </InfoWindow>
+            )}
+          </GoogleMap>
+        </LoadScript>
       </>
     );
   } else {
@@ -130,8 +132,6 @@ const App = () => {
 };
 
 function map() {
-  const [location, setLocation] = useState([]);
-
   return (
     <div>
       <CssBaseline />
