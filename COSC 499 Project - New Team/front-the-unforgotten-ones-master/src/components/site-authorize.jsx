@@ -17,6 +17,7 @@ import ReschedulePage from './reschedule-page';
 import ReviewPage from './review-page';
 import AboutUs from './about-us';
 import PrivacyPolicy from './privacy-policy';
+import map from './map';
 
 /** 
  * 
@@ -96,6 +97,7 @@ const AuthSite = ({ logout, user }) => {
           <Route path="/review" component={ReviewPage}></Route>
           <Route exact path="/about-us" component={AboutUs}></Route>
           <Route exact path="/privacy-policy" component={PrivacyPolicy}></Route>
+          <Route exact path="/map" component={map}></Route>
         </Switch>
       </div>
     </div>
