@@ -62,7 +62,7 @@ function getInfo() {
               size = Object.keys(markers).length;
               console.log(size);
               //Depending on your seed data, you may need to play around with the if statement
-              if (size > 8) {
+              if (size > data.length - 1) {
                 setTest(() => markers);
               }
             })
