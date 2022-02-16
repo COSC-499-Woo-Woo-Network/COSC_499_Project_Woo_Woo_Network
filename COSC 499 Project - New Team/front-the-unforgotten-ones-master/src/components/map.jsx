@@ -9,6 +9,10 @@ import {
 import { CssBaseline } from '@material-ui/core';
 import DefaultButton from './comps/defButton';
 
+//TO RUN THIS PAGE, YOU WILL LIKELY NEED TO INSTALL THE FOLLOWING NPM PACKAGES:
+// npm install --save react-native-geocoding (need to geocode the location to lat/long coordinates for the map to work)
+// npm i -S @react-google-maps/api
+
 Geocoder.init('AIzaSyBLoF_U9lWDY7E6ED1tVXUEQgLv2ydvWI0');
 
 const containerStyle = {
@@ -58,7 +62,7 @@ function getInfo() {
               size = Object.keys(markers).length;
               console.log(size);
               //Depending on your seed data, you may need to play around with the if statement
-              if (size > data.length - 1) {
+              if (size > 8) {
                 setTest(() => markers);
               }
             })
