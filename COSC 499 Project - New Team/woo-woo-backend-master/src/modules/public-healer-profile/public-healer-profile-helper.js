@@ -76,7 +76,7 @@ const getLocationList = async (limit, start) => {
         },
       ],
       offset: start ? start : 0,
-      limit: limit ? limit : 10,
+      limit: limit ? limit : 250,
     });
   } else {
     location = await db.User.findAll({
@@ -94,7 +94,7 @@ const getLocationList = async (limit, start) => {
         },
       ],
       offset: start ? start : 0,
-      limit: limit ? limit : 10,
+      limit: limit ? limit : 250,
     });
   }
   // const locationList = location.map((healer) => {
