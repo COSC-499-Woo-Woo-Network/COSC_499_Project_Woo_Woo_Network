@@ -40,9 +40,9 @@ function getInfo() {
         if (!response.ok)
           throw Error(response.status + ': ' + response.statusText);
         const data = await response.json();
-        console.log(data.length);
+        console.log(data);
         data.slice(0, data.length).map((i) =>
-          Geocoder.from(i.Location.city)
+          Geocoder.from(i.Location.postalCode)
             .then((json) => {
               var result = json.results;
               var fname = i.firstName;
@@ -60,9 +60,9 @@ function getInfo() {
               };
               markers[fname] = marker;
               size = Object.keys(markers).length;
-              console.log(size);
+              //console.log(size);
               //Depending on your seed data, you may need to play around with the if statement
-              if (size > data.length - 1) {
+              if (size > 52) {
                 setTest(() => markers);
               }
             })
