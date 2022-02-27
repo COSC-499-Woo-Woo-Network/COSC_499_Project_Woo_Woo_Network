@@ -28,6 +28,7 @@ import PageTitle from './comps/pgTitle';
 import SmallClearButton from './comps/smlClearButton';
 import { isFirstDayOfMonth } from 'date-fns/esm';
 import { Link } from 'react-router-dom';
+import { Route } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
   text: {
@@ -276,7 +277,7 @@ function Home() {
   {
     if (query == '' || query == null) {
       for (var i = 0; i < healers.length; i++) {
-        if (healers[i].firstName.includes('')) {
+        if (healers[i].firstName.includes('') && healers[i].account != null) {
           testHealer[i] = {
             firstName: healers[i].firstName,
             lastName: healers[i].lastName,
@@ -293,12 +294,13 @@ function Home() {
       var query1 = query.toLowerCase();
       for (var i = 0; i < healers.length; i++) {
         if (
-          healers[i].firstName.toLowerCase().includes(query1) ||
-          healers[i].lastName.toLowerCase().includes(query1) ||
-          healers[i].account.description.toLowerCase().includes(query1) ||
-          healers[i].Location.city.toLowerCase().includes(query1) ||
-          healers[i].Location.province.toLowerCase().includes(query1) ||
-          healers[i].Location.country.toLowerCase().includes(query1)
+          (healers[i].firstName.toLowerCase().includes(query1) ||
+            healers[i].lastName.toLowerCase().includes(query1) ||
+            //healers[i].account.description.toLowerCase().includes(query1) ||
+            healers[i].Location.city.toLowerCase().includes(query1) ||
+            healers[i].Location.province.toLowerCase().includes(query1) ||
+            healers[i].Location.country.toLowerCase().includes(query1)) &&
+          healers[i].account != null
         ) {
           testHealer[i] = {
             firstName: healers[i].firstName,
