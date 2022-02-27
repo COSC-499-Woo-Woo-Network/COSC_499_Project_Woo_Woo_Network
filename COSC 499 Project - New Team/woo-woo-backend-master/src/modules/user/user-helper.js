@@ -12,7 +12,9 @@ import capitalize from 'capitalize';
 import healerPaymentHelper from '../general/utils/payment/healer-payment-helper';
 import sendEmail from '../general/utils/send-email-helper/send-email-helper';
 import emailTemplateId from '../general/utils/send-email-helper/email-template-id';
+import { sendEmailVerification } from '../general/utils/firebase/firebase';
 
+console.log('cu1');
 /**
  * Get common user information
  */
@@ -53,9 +55,13 @@ const createAuthAccount = async ({
 }) => {
   try {
     // may need to have some nicer way to do it.
-    const user = await promiseWrapper(
-      auth().createUserWithEmailAndPassword(email, password)
-    );
+    
+    //const user = await promiseWrapper(
+    auth().createUserWithEmailAndPassword(email, password)
+      .then((userCredential) => {
+        userCredential.user.sendEmailVerification();
+      })
+    //);
     await user.user.updateProfile({
       displayName: capitalize(displayName),
     });
@@ -111,6 +117,8 @@ const getHealerUser = async (uid) => {
  * Create a new user (either healer or client)
  */
 const createUser = async (isHealer, userInfo) => {
+  console.log('auth');
+  console.log('creating user');
   try {
     userInfo.role = isHealer ? 'healer' : 'client';
     if (isHealer) {
@@ -136,7 +144,7 @@ const createUser = async (isHealer, userInfo) => {
       await sendEmail({
         to: [
           {
-            email: userEmail,
+            email: 'mikey9414@gmail.com',
           },
         ],
         params: {
@@ -146,7 +154,36 @@ const createUser = async (isHealer, userInfo) => {
         templateId: emailTemplateId.PAYOUT_FORM_TO_HEALER,
       });
     } else {
+      console.log('cu');
       await User.create(userInfo);
+        console.log('here');
+        // create reusable transporter object using the default SMTP transport
+        let mailTransporter = nodemailer.createTransport({
+          host: 'gmail',
+          //port: 587,
+          //secure: false, // true for 465, false for other ports
+          auth: {
+            user: 'woowoo.do.not.reply@gmail.com', // generated ethereal user
+            pass: 'woowoomail', // generated ethereal password
+          },
+        });
+        console.log('here1');
+        // send mail with defined transport object
+        let mailDets = {
+          from: 'xyz@gmail.com', // sender address
+          to: 'mikey9414@gmail.com', // list of receivers
+          subject: 'Hello ✔', // Subject line
+          text: 'Hello world?', // plain text body
+          html: '<b>Hello world?</b>', // html body
+        };
+        console.log('here2');
+        mailTransporter.sendMail(mailDets, function (err, data) {
+          if (err) {
+            console.log('Error Occurs');
+          } else {
+            console.log('Email sent successfully');
+          }
+        });
     }
   } catch (err) {
     console.log(err);
