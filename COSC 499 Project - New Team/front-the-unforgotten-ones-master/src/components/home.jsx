@@ -293,25 +293,27 @@ function Home() {
     } else {
       var query1 = query.toLowerCase();
       for (var i = 0; i < healers.length; i++) {
-        if (
-          (healers[i].firstName.toLowerCase().includes(query1) ||
-            healers[i].lastName.toLowerCase().includes(query1) ||
-            //healers[i].account.description.toLowerCase().includes(query1) ||
-            healers[i].Location.city.toLowerCase().includes(query1) ||
-            healers[i].Location.province.toLowerCase().includes(query1) ||
-            healers[i].Location.country.toLowerCase().includes(query1)) &&
-          healers[i].account != null
-        ) {
-          testHealer[i] = {
-            firstName: healers[i].firstName,
-            lastName: healers[i].lastName,
-            description: healers[i].account.description,
-            id: healers[i].account.id,
-            brandName: healers[i].account.brandName,
-            city: healers[i].Location.city,
-            province: healers[i].Location.province,
-            country: healers[i].Location.country,
-          };
+        if (healers[i].Location != null && healers[i].account != null) {
+          if (
+            (healers[i].firstName.toLowerCase().includes(query1) ||
+              healers[i].lastName.toLowerCase().includes(query1) ||
+              healers[i].account.description.toLowerCase().includes(query1) ||
+              healers[i].Location.city.toLowerCase().includes(query1) ||
+              healers[i].Location.province.toLowerCase().includes(query1) ||
+              healers[i].Location.country.toLowerCase().includes(query1)) &&
+            healers[i].account != null
+          ) {
+            testHealer[i] = {
+              firstName: healers[i].firstName,
+              lastName: healers[i].lastName,
+              description: healers[i].account.description,
+              id: healers[i].account.id,
+              brandName: healers[i].account.brandName,
+              city: healers[i].Location.city,
+              province: healers[i].Location.province,
+              country: healers[i].Location.country,
+            };
+          }
         }
       }
     }
