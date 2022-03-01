@@ -189,7 +189,7 @@ const TimeSelector = (props) => {
         console.log(Error);
       }
     })();
-  }, props);
+  }, [props]);
 
   return (
     <Box className={classes.timeContainer}>
