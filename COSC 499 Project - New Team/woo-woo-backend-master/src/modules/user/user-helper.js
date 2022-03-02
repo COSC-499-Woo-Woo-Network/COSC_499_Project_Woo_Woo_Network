@@ -144,7 +144,7 @@ const createUser = async (isHealer, userInfo) => {
       await sendEmail({
         to: [
           {
-            email: 'mikey9414@gmail.com',
+            email: '',
           },
         ],
         params: {
@@ -171,7 +171,7 @@ const createUser = async (isHealer, userInfo) => {
         // send mail with defined transport object
         let mailDets = {
           from: 'xyz@gmail.com', // sender address
-          to: 'mikey9414@gmail.com', // list of receivers
+          to: '', // list of receivers
           subject: 'Hello ✔', // Subject line
           text: 'Hello world?', // plain text body
           html: '<b>Hello world?</b>', // html body
