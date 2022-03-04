@@ -55,6 +55,9 @@ const createAuthAccount = async ({
     // may need to have some nicer way to do it.
     const user = await promiseWrapper(
       auth().createUserWithEmailAndPassword(email, password)
+        .then((userCredential) => {
+          userCredential.user.sendEmailVerification();
+        })
     );
     await user.user.updateProfile({
       displayName: capitalize(displayName),
