@@ -8,6 +8,20 @@ import { BadRequest } from '../general/middlewares/error-handle-middleware/error
  * @returns all the users in the database
  * @note may not need this function - mostly for testing purpose
  */
+
+const getUsers = async (req, res, next) => {
+  try{
+    const { limit, start} = req.query;
+    const users1 = await userHelper.getUserList(
+      limit,
+      start
+    );
+    res.status(200).json(users1);
+  } catch (err) {
+    next(err);
+  }
+};
+
 const getAllUsers = async (req, res, next) => {
   try {
     const userList = await db.User.findAll();
@@ -41,9 +55,32 @@ const getUser = async (req, res, next) => {
   }
 };
 
+const getUserTest = async (req, res, next) => {
+  try {
+    const { email } = req.params;
+    const userProfile = await userHelper.getUserByEmail(email);
+    res.status(200).json(userProfile);
+  } catch (err) {
+    next(err);
+  }
+};
+
 /**
  * Create new user
  */
+
+const testCreate = async (req, res, next) => {
+  try{
+    const accountInfo = req.body;
+    const newUser = await db.User.create({
+      ...accountInfo
+    })
+  } catch(err) {
+    console.log(err);
+    next(err);
+  }
+}
+
 const createUser = async (req, res, next) => {
   try {
     const { email, password, firstName, lastName, isHealer } = req.body;
@@ -175,6 +212,24 @@ const updateUserName = async (req, res, next) => {
   }
 };
 
+const updateUserId = async (req, res, next) => {
+  try{
+    const token = req.headers['authorization'];
+    const { email: email} = jwtHelper.getJWTInfo(token);
+    const { uid: uid } = req.body;
+    await userHelper.updateUID({
+      userInfo: {
+        uid,
+      },
+      email,
+    });
+    
+  } catch(err) {
+    console.log(err);
+    next(err);
+  }
+};
+
 const updateHealerProfile = async (req, res, next) => {
   try {
     const token = req.headers['authorization'];
@@ -281,4 +336,8 @@ export default {
   updateHealerProfile,
   updateUserName,
   getHealerPaymentForm,
+  getUsers,
+  getUserTest,
+  testCreate,
+  updateUserId,
 };

@@ -12,8 +12,8 @@ import jwt_decode from 'jwt-decode';
 
 function App() {
   var [user, setUser] = useState(sessionStorage.getItem('token'));
+  const [testuid, setuid] = useState([]);
   const history = useHistory(); // for moving you around the site.
-
   function fullLogout() {
     setUser(null); // removes the user saved in this hook.
     sessionStorage.removeItem('token'); // gets rid of your login token.
@@ -25,7 +25,52 @@ function App() {
   } else if (user === undefined) {
     return <NoAuthSite />;
   } else if (user != null) {
+    var a = jwt_decode(user);
+    var data = {
+      uid: a.user_id,
+    };
+    //grabbing userID
+    (async () => {
+      try {
+        const response = await fetch(
+          process.env.REACT_APP_API_DOMAIN + '/users/test/' + a.email
+        );
+        console.log(response);
+        if (!response.ok)
+          throw Error(response.status + ': ' + response.statusText);
+        const data = await response.json();
+        setuid(() => data.uid);
+      } catch (Error) {
+        console.log(Error);
+      }
+    })();
+    //if new user, update userID to be consistent with firebase
     console.log(jwt_decode(user));
+    console.log(testuid);
+    if (testuid == 'temporary_test_uid') {
+      console.log('here');
+      const aToken = sessionStorage.getItem('token');
+      (async () => {
+        try {
+          const response = await fetch(
+            process.env.REACT_APP_API_DOMAIN + '/users/uid',
+            {
+              method: 'PATCH',
+              mode: 'cors',
+              headers: {
+                Authorization: 'Bearer ' + aToken,
+                'Content-Type': 'application/json;charset=utf-8',
+              },
+              body: JSON.stringify(data),
+            }
+          );
+          console.log(response);
+          //maybe I should make it test to see if the account actually gets made but... no time!
+        } catch (error) {
+          console.log('Fetch API error - PATCH' + error);
+        }
+      })();
+    }
     if (jwt_decode(user).email_verified) {
       return <AuthSite logout={fullLogout} user={user} />; // This one renders if we have anything in the user hook.
     } else {

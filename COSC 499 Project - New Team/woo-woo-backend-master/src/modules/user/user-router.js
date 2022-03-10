@@ -8,6 +8,16 @@ import authMiddleware from '../general/middlewares/auth-middleware';
 const userRouter = express.Router({ mergeParams: true });
 
 userRouter
+  .route('/test1')
+  .post(userController.testCreate)
+
+userRouter
+  .route('/test/:email')
+  .get(userController.getUserTest);
+
+userRouter.get('/userss', userController.getUsers);
+
+userRouter
   .route('/')
   .get(authMiddleware.isAuthenticatedUser, userController.getUser)
   .post(userController.createUser)
@@ -23,6 +33,11 @@ userRouter
 userRouter
   .route('/name')
   .patch(authMiddleware.isAuthenticatedUser, userController.updateUserName);
+
+userRouter
+  .route('/uid')
+  .patch(authMiddleware.isAuthenticatedUser, userController.updateUserId);
+
 userRouter
   .route('/photo')
   .patch(

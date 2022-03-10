@@ -247,6 +247,13 @@ function SignUp() {
               //passwordConfirm: '',
             }}
             onSubmit={(data, { setSubmitting }) => {
+              if (data.isHealer == null) {
+                data.role = 'client';
+              } else {
+                data.role = 'healer';
+              }
+              data.uid = 'temporary_test_uid';
+              console.log(data);
               //setSubmitting keeps track of whether you are in the midst of submitting data
               setSubmitting(true);
               setLoading(true);
@@ -254,6 +261,69 @@ function SignUp() {
                 try {
                   const response = await fetch(
                     process.env.REACT_APP_API_DOMAIN + '/users',
+                    {
+                      method: 'POST',
+                      mode: 'cors',
+                      headers: {
+                        'Content-Type': 'application/json;charset=utf-8',
+                      },
+                      body: JSON.stringify(data),
+                    }
+                  );
+                  if (response.status == 201) {
+                    history.push('/login'); // sends you to the login page after you make the account
+                  } else {
+                    alert('Email already exists.');
+                  }
+                  //maybe I should make it test to see if the account actually gets made but... no time!
+                } catch (error) {
+                  console.log('Fetch API error - post' + error);
+                }
+              })();
+              // (async () => {
+              //   try {
+              //     const response = await fetch(
+              //       process.env.REACT_APP_API_DOMAIN +
+              //         '/users/test/' +
+              //         data.email
+              //     );
+              //     console.log(response);
+              //     if (!response.ok)
+              //       throw Error(response.status + ': ' + response.statusText);
+              //     const data1 = await response.json();
+              //     if (data1 == null) {
+              //       (async () => {
+              //         try {
+              //           const response = await fetch(
+              //             process.env.REACT_APP_API_DOMAIN + '/users/test1',
+              //             {
+              //               method: 'POST',
+              //               mode: 'cors',
+              //               headers: {
+              //                 'Content-Type': 'application/json;charset=utf-8',
+              //               },
+              //               body: JSON.stringify(data),
+              //             }
+              //           );
+              //           if (response.status == 201) {
+              //             history.push('/login'); // sends you to the login page after you make the account
+              //           } else {
+              //             alert('Email already exists.');
+              //           }
+              //           //maybe I should make it test to see if the account actually gets made but... no time!
+              //         } catch (error) {
+              //           console.log('Fetch API error - post' + error);
+              //         }
+              //       })();
+              //     }
+              //   } catch (Error) {
+              //     console.log(Error);
+              //   }
+              // })();
+              (async () => {
+                try {
+                  const response = await fetch(
+                    process.env.REACT_APP_API_DOMAIN + '/users/test1',
                     {
                       method: 'POST',
                       mode: 'cors',
