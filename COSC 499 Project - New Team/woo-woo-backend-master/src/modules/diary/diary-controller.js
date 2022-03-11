@@ -11,18 +11,18 @@ const getDiaryByDate = async (req, res, next) => {
     const token = req.headers['authorization'];
     const { user_id } = jwtHelper.getJWTInfo(token);
     const { date } = req.query;
-
+    const user = await db.User.findOne({
+      attributes: ['id'],
+      where: {
+        uid: user_id,
+      },
+    });
     // find diary based on userId and date
     const diary = await db.Diary.findOne({
       attributes: ['userId', 'description', 'date'],
       where: {
         date,
-      },
-      includes: {
-        model: db.User,
-        where: {
-          uid: user_id,
-        },
+        userId: user.dataValues.id,
       },
     });
     if (diary == null) {
