@@ -93,7 +93,7 @@ const AccountPage = () => {
                 <SmallClearButton
                   type="submit"
                   href="/diary"
-                  contents="My Journal"
+                  contents="My Diary"
                 />
               </Grid>
               {decodedToken.healer && <Grid item xs={2}></Grid>}
