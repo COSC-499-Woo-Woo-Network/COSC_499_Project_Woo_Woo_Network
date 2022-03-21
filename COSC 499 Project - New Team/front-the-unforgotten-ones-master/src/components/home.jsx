@@ -277,7 +277,11 @@ function Home() {
   {
     if (query == '' || query == null) {
       for (var i = 0; i < healers.length; i++) {
-        if (healers[i].firstName.includes('') && healers[i].account != null) {
+        if (
+          healers[i].firstName.includes('') &&
+          healers[i].account != null &&
+          healers[i].Location != null
+        ) {
           testHealer[i] = {
             firstName: healers[i].firstName,
             lastName: healers[i].lastName,
