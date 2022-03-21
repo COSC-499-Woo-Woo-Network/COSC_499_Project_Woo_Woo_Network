@@ -16,13 +16,13 @@ import DefaultButton from './comps/defButton';
 Geocoder.init('AIzaSyBLoF_U9lWDY7E6ED1tVXUEQgLv2ydvWI0');
 
 const containerStyle = {
-  width: '700px',
-  height: '500px',
+  width: '90vw',
+  height: '75vh',
 };
 
 const center = {
-  lat: 41.824,
-  lng: -62.412,
+  lat: 0.0,
+  lng: 0.0,
 };
 
 //This function returns a list of healers with their id, and coordinates for the markers
@@ -42,7 +42,7 @@ function getInfo() {
         const data = await response.json();
         console.log(data);
         data.slice(0, data.length).map((i) =>
-          Geocoder.from(i.Location.postalCode)
+          Geocoder.from(i.Location.city)
             .then((json) => {
               var result = json.results;
               var fname = i.firstName;
@@ -62,7 +62,7 @@ function getInfo() {
               size = Object.keys(markers).length;
               //console.log(size);
               //Depending on your seed data, you may need to play around with the if statement
-              if (size > 52) {
+              if (size > 99) {
                 setTest(() => markers);
               }
             })
