@@ -2,6 +2,9 @@ import Media from 'react-media';
 import React, { useState } from 'react';
 //import { useHistory } from 'react-router-dom';
 //can change this icon later on to our logo
+/*Need to add payment method using stripe, not enough time*/
+/* Bopoking page needs the most work on this website, a lot of the test data is inconsistent and the code does
+    not output the right data sometimes */
 import {
   Paper,
   CssBaseline,
@@ -123,7 +126,7 @@ const useGlobalState = () => [
   React.useContext(GlobalStateContext),
   React.useContext(DispatchStateContext),
 ];
-
+/* Time button is not highlighted when selected so it confuses the user. Should add CSS theme to fix that*/
 const TimeButton = (props) => {
   //PROPS: I have time, the date, index
   const classes = useStyles();

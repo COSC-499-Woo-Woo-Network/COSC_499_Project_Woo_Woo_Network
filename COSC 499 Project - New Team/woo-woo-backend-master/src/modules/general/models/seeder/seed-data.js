@@ -103,7 +103,7 @@ export const createHealerBulk = async () => {
       serviceId: serviceListRes[i].id,
       clientId: response[i].id,
       healerProfileId: serviceListRes[i].healerProfileId,
-      sessionTime: year + "-" + month + "-" + date + "12:00:00.000 + 00:00",
+      sessionTime: year + "-" + month + "-" + date + "12:00:00.000 + 00:00", //Listing an hour session
       sessionLength: serviceListRes[i].timeLength,
       price: serviceListRes[i].price,
       status: 'paid',
@@ -112,7 +112,7 @@ export const createHealerBulk = async () => {
     });
     date_obj.setDate(date_obj.getDate()+1);
   }
-
+/* Sometimes the seed data bugs out and lists multiple times that are the same on the same day*/
   const appointmentRes = await db.Appointment.bulkCreate(appointmentList, {
     returning: true,
   });
@@ -169,6 +169,7 @@ for (let i = 0; i < 10; i++) {
     date_ob.setDate(date_ob.getDate()+1);
   }
 }
+/* Sometimes the seed data bugs out and lists multiple times that are the same on the same day*/
 const response = db.HealerSchedule.bulkCreate(healerScheduleList, {
   returning: true,
 });
