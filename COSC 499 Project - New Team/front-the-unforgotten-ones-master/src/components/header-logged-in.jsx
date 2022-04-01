@@ -16,6 +16,7 @@ import { HashLink as Link } from 'react-router-hash-link';
 //import './app/app.css';
 //import logo
 import phoenixLogo from '../media/phoenixLogo.svg';
+import DefaultButton from './comps/defButton';
 
 // if user is logged in, the nav bar icons will display as : Home, Healers, Account, Logout
 // is user is NOT logged in: Home, Sign Up, Login, Healers,
@@ -34,6 +35,24 @@ const headersDataLoggedIn = [
     href: '/logout',
   },
 ];
+
+//next two function handle mouseIn and mouseOut when hovering over account while logged in
+//need to still implement dropdown
+function handleMouseEnter(e) {
+  if (e.target.children[0] != null) {
+    if (e.target.children[0].innerText.includes('ACCOUNT')) {
+      console.log('enter');
+    }
+  }
+}
+
+function handleMouseLeave(e) {
+  if (e.target.children[0] != null) {
+    if (e.target.children[0].innerText.includes('ACCOUNT')) {
+      console.log('leave');
+    }
+  }
+}
 
 // Styles to be changed - made navbar responsive for mobile use
 const useStyles = makeStyles(() => ({
@@ -185,6 +204,8 @@ function NavBar() {
             color: 'inherit',
             href: href,
             className: menuButton,
+            onMouseEnter: handleMouseEnter,
+            onMouseLeave: handleMouseLeave,
           }}
         >
           {label}
